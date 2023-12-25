@@ -1,25 +1,81 @@
-import logo from './logo.svg';
-import './App.css';
+import React,{Suspense} from 'react';
+import {
+  BrowserRouter as Router,
+  Route,
+  Redirect,
+  Switch
+} from 'react-router-dom';
 
-function App() {
+import MainNavigation from './shared/components/Navigation/MainNavigation';
+import { AuthContext } from './shared/context/auth-context';
+import { useAuth } from './shared/hooks/auth-hook';
+import LoadingSpinner from './shared/components/UIElements/LoadingSpinner';
+
+const Users = React.lazy(()=> import('./user/pages/Users'));
+const NewMessage = React.lazy(()=> import('./message/pages/NewMessage'));
+const UserMessages = React.lazy(()=> import('./message/pages/UserMessages'));
+const UpdateMessage = React.lazy(()=> import('./message/pages/UpdateMessage'));
+const Auth = React.lazy(()=> import('./user/pages/Auth'));
+
+const App = () => {
+  const {token, login, logout, userId} = useAuth()
+  let routes;
+
+  if (token) {
+    routes = (
+      <Switch>
+        <Route path="/" exact>
+          <Users />
+        </Route>
+        <Route path="/:userId/messages" exact>
+          <UserMessages />
+        </Route>
+        <Route path="/messages/new" exact>
+          <NewMessage />
+        </Route>
+        <Route path="/messages/:messageId">
+          <UpdateMessage/>
+        </Route>
+        <Redirect to="/" />
+      </Switch>
+    );
+  } else {
+    routes = (
+      <Switch>
+        <Route path="/" exact>
+          <Users />
+        </Route>
+        <Route path="/:userId/messages" exact>
+          <UserMessages />
+        </Route>
+        <Route path="/auth">
+          <Auth />
+        </Route>
+        <Redirect to="/auth" />
+      </Switch>
+    );
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <AuthContext.Provider
+      value={{
+        isLoggedIn: !!token,
+        token: token,
+        userId: userId,
+        login: login,
+        logout: logout
+      }}
+    >
+      <Router>
+        <MainNavigation />
+        <main>
+          <Suspense fallback={<div className="center"><LoadingSpinner/> </div>}>
+            {routes}
+          </Suspense>
+        </main>
+      </Router>
+    </AuthContext.Provider>
   );
-}
+};
 
 export default App;
