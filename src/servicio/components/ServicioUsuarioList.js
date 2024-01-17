@@ -62,6 +62,8 @@ const ServicioUsuarioList = props=>{
         props.items.splice(index, 1);
         setUsuariosProps (x);                        
       }
+
+      
         
 
       const insertarUsuarioHandler= async event =>{
