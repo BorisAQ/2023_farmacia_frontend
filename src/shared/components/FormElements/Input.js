@@ -1,5 +1,5 @@
 import React, { useReducer, useEffect } from 'react';
-
+import ServicioUsuarioList from '../../../servicio/components/ServicioUsuarioList';
 import { validate } from '../../util/validators';
 import './Input.css';
 
@@ -9,7 +9,7 @@ const inputReducer = (state, action) => {
       return {
         ...state,
         value: action.val,
-        isValid: validate(action.val, action.validators)
+        isValid: validate(action.val, action.validators)        
       };
     case 'TOUCH': {
       return {
@@ -40,7 +40,7 @@ const Input = props => {
     dispatch({
       type: 'CHANGE',
       val: event.target.value,
-      validators: props.validators
+      validators: props.validators      
     });
   };
 
@@ -50,9 +50,10 @@ const Input = props => {
     });
   };
 
-  const element =
-    props.element === 'input' ? (
-      <input
+  let element;
+  
+  if (props.element === 'input'){
+    element = <input
         id={props.id}
         type={props.type}
         placeholder={props.placeholder}
@@ -60,15 +61,49 @@ const Input = props => {
         onBlur={touchHandler}
         value={inputState.value}
       />
-    ) : (
-      <textarea
-        id={props.id}
-        rows={props.rows || 3}
-        onChange={changeHandler}
-        onBlur={touchHandler}
-        value={inputState.value}
-      />
-    );
+  }
+  if (props.element === 'textarea'){
+    element = <textarea
+    id={props.id}
+    rows={props.rows || 3}
+    onChange={changeHandler}
+    onBlur={touchHandler}
+    value={inputState.value}
+    />
+  }
+  
+  if (props.element === 'select'){
+    element = <select
+    id={props.id}
+    
+    onChange={changeHandler}
+    onBlur={touchHandler}
+    
+    value={inputState.value}  
+    >
+      {
+        props.valoresSeleccion.map(
+          item => <option value={item.id}>{item.name}</option>    
+        )
+      }      
+    </select>
+  }
+
+  if (props.element === 'usuarios'){
+    element = <ServicioUsuarioList
+    id="usuarios"
+    items= {props.usuarios}//referencia
+    todoslosUsuarios = {props.todoslosUsuarios  } 
+    value={inputState.value}  
+    onChange={changeHandler}
+    onBlur={touchHandler}
+    
+    />
+
+    
+   
+  }
+
 
   return (
     <div

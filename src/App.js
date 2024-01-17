@@ -15,6 +15,9 @@ const Users = React.lazy(()=> import('./user/pages/Users'));
 const NewMessage = React.lazy(()=> import('./message/pages/NewMessage'));
 const UserMessages = React.lazy(()=> import('./message/pages/UserMessages'));
 const UpdateMessage = React.lazy(()=> import('./message/pages/UpdateMessage'));
+const Servicios = React.lazy(()=> import('./servicio/pages/Servicios'));
+const NewServicio = React.lazy(()=> import('./servicio/pages/newService'));
+const UpdateServicio = React.lazy(()=> import('./servicio/pages/updateService'));
 const Auth = React.lazy(()=> import('./user/pages/Auth'));
 
 const App = () => {
@@ -33,6 +36,15 @@ const App = () => {
         <Route path="/messages/new" exact>
           <NewMessage />
         </Route>
+        <Route path="/servicios" exact>
+          <Servicios />
+        </Route>
+        <Route path="/servicios/new" exact>
+          <NewServicio />
+        </Route>
+        <Route path="/servicios/:servicioId" exact>
+          <UpdateServicio />
+        </Route>
         <Route path="/messages/:messageId">
           <UpdateMessage/>
         </Route>
@@ -47,10 +59,13 @@ const App = () => {
         </Route>
         <Route path="/:userId/messages" exact>
           <UserMessages />
+        
         </Route>
+        
         <Route path="/auth">
           <Auth />
         </Route>
+        
         <Redirect to="/auth" />
       </Switch>
     );

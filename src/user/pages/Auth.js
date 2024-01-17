@@ -17,6 +17,17 @@ import { AuthContext } from '../../shared/context/auth-context';
 import './Auth.css';
 
 const Auth = () => {
+  const valoresSeleccion = [
+    {
+      codigo: 'fdsafdsfd',
+      valor: 'Servicio 1'
+    },
+    {
+      codigo: 'eeeeeeeeee',
+      valor: 'Servicio 2'
+    }
+  ]
+
   const auth = useContext(AuthContext);
   const [isLoginMode, setIsLoginMode] = useState(true);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
@@ -130,6 +141,9 @@ const Auth = () => {
             errorText="Please enter a valid email address."
             onInput={inputHandler}
           />
+
+          
+          
           <Input
             element="input"
             id="password"

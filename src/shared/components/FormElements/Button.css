@@ -1,9 +1,9 @@
 .button {
     font: inherit;
     padding: 0.5rem 1.5rem;
-    border: 1px solid #ff0055;
+    border: 1px solid #0E6BA8 ;
     border-radius: 4px;
-    background: #ff0055;
+    background: #0E6BA8;
     color: white;
     cursor: pointer;
     margin-right: 1rem;
@@ -33,7 +33,7 @@
   }
   
   .button--danger {
-    background: #830000;
+    background: #f2b79f;
     border-color: #830000;
   }
   
