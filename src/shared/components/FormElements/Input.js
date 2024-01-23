@@ -149,6 +149,7 @@ const Input = props => {
     
     danger: 'red',
     dangerLight: 'purple',
+    
     neutral0: 'gray',
     neutral5: "orange",
     neutral10: 'red',
