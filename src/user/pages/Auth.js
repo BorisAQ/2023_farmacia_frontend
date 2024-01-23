@@ -17,16 +17,7 @@ import { AuthContext } from '../../shared/context/auth-context';
 import './Auth.css';
 
 const Auth = () => {
-  const valoresSeleccion = [
-    {
-      codigo: 'fdsafdsfd',
-      valor: 'Servicio 1'
-    },
-    {
-      codigo: 'eeeeeeeeee',
-      valor: 'Servicio 2'
-    }
-  ]
+
 
   const auth = useContext(AuthContext);
   const [isLoginMode, setIsLoginMode] = useState(true);
@@ -86,7 +77,8 @@ const Auth = () => {
             'Content-Type': 'application/json'
           }
         );
-        auth.login(responseData.userId, responseData.token);
+        auth.login(responseData.userId, responseData.token, responseData.servicio);
+        
       } catch (err) {}
     } else {
       try {
@@ -104,8 +96,7 @@ const Auth = () => {
           }
          
         );
-
-        auth.login(responseData.userId, responseData.token);
+        auth.login(responseData.userId, responseData.token, responseData.servicio);
       } catch (err) {
         
       }

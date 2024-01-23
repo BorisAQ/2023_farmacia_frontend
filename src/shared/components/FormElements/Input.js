@@ -1,7 +1,9 @@
 import React, { useReducer, useEffect } from 'react';
 import ServicioUsuarioList from '../../../servicio/components/ServicioUsuarioList';
+import ServicioPrestacionList from '../../../servicio/components/ServicioPrestacionList';
 import { validate } from '../../util/validators';
 import './Input.css';
+import Select from 'react-select'
 
 const inputReducer = (state, action) => {
   switch (action.type) {
@@ -71,6 +73,16 @@ const Input = props => {
     value={inputState.value}
     />
   }
+  if (props.element === 'date'){
+    element = <input
+    id={props.id}
+    type={props.type}
+    placeholder={props.placeholder}
+    onChange={changeHandler}
+    onBlur={touchHandler}
+    value={inputState.value}
+  />
+  }
   
   if (props.element === 'select'){
     element = <select
@@ -98,10 +110,62 @@ const Input = props => {
     onChange={changeHandler}
     onBlur={touchHandler}
     
-    />
+    />   
+  }
+
+  if (props.element === 'persona'){
+    const changeSelect = (e)=>{
+        console.log (e)
+    }
+    element =<div>
+      <input
+        id={props.id}
+        type={props.type}
+        placeholder={props.placeholder}
+        onChange={changeHandler}
+        onBlur={touchHandler}
+        value={inputState.value}
+      />
+            
+      
+    </div>    
+  }
+
+  if (props.element === 'persona1'){
+    element = <Select id = 'select' options={[
+      { value: 'chocolate', label: 'Calcina Pedro' },
+      { value: 'strawberry', label: 'Calcina Salvatierra Mateo' },
+      { value: 'vanilla', label: 'Calsina Armayo Juana' }
+      
+    ]}
 
     
-   
+    theme={(theme) => ({
+      ...theme,
+      borderRadius: 0,
+      colors: {
+        ...theme.colors,
+        
+    
+    danger: 'red',
+    dangerLight: 'purple',
+    neutral0: 'gray',
+    neutral5: "orange",
+    neutral10: 'red',
+    neutral20:'white',
+    neutral30: 'red',
+    neutral40: 'red',
+    neutral50: 'black',
+    neutral60: '#0E6BA8',
+    neutral70: 'black',
+    neutral80: 'black',
+    primary: 'white',
+    primary25: 'black',
+    primary50: 'black',
+    primary75: 'black',      }
+      
+    })}
+    />
   }
 
 

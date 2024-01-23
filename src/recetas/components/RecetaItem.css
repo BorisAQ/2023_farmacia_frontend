@@ -1,0 +1,71 @@
+.creadoPor{
+  font-size: 0.8rem;
+  text-align: right;
+}
+
+.medicamento{
+  font-size: 0.9rem;
+}
+
+.ente-item {
+    margin: 0.5rem 0;
+  }
+  
+  .ente-item__content {
+    padding: 0;
+  }
+  
+  .ente-item__info {
+    padding: 0.5rem;
+    text-align: center;
+  }
+  
+  .ente-item__image {
+    width: 100%;
+    height: 12.5rem;
+    margin-right: 1.5rem;
+  }
+  
+  .ente-item__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .ente-item__info h2,
+  .ente-item__info h3,
+  .ente-item__info p {
+    margin: 0 0 0.5rem 0;
+  }
+  
+  .ente-item__actions {
+    padding: 0rem;
+    text-align: center;
+    border-top: 1px solid #ccc;
+    
+  }
+  
+  .ente-item__modal-content {
+    padding: 0.5;
+  }
+  
+  .ente-item__modal-actions {
+    text-align: right;
+  }
+  
+  .ente-item__actions button,
+  .ente-item__actions a {
+    margin: 0.5rem;
+  }
+  
+  .map-container{
+    height: 15rem;
+    width: 100%;
+  }  
+
+
+  @media (min-width: 768px) {
+    .ente-item__image {
+      height: 20rem;
+    } 
+  }

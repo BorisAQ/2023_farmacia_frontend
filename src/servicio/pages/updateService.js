@@ -16,6 +16,7 @@ import { useForm } from '../../shared/hooks/form-hook';
 import { useHttpClient } from '../../shared/hooks/http-hook';
 import { AuthContext } from '../../shared/context/auth-context';
 import './ServiceForm.css';
+import ServicioPrestacionList from '../components/ServicioPrestacionList';
 
 
 
@@ -40,6 +41,10 @@ const UpdateService = () => {
       usuarios:{
         value:[],
         isValid: true
+      },
+      prestaciones:{
+        value:[],
+        isValid: true
       }
     },
     false
@@ -57,19 +62,26 @@ const UpdateService = () => {
             Authorization: 'Bearer ' + auth.token
           }
         );        
+          
         setLoadedServicio(responseData.servicio);
+        
+        
         setFormData(
           {
             name: {
-              value: responseData.service.name,
+              value: responseData.servicio.name,
               isValid: true
             },
             codigoSistema: {
-              value: responseData.service.codigoSistema,
+              value: responseData.servicio.codigoSistema,
               isValid: true
             },
             usuarios:{
-              value: responseData.service.usuarios,
+              value: responseData.servicio.usuarios,
+              isValid: true
+            },
+            prestaciones:{
+              value: responseData.servicio.prestaciones,
               isValid: true
             }
           },
@@ -187,6 +199,13 @@ const UpdateService = () => {
             todoslosUsuarios = {loadedUsers}
             initialValid={true}
           />
+          <ServicioPrestacionList
+            id= "sss"
+            prestaciones = {loadedServicio.prestaciones}
+            >
+
+          </ServicioPrestacionList>
+             
           
           
 
