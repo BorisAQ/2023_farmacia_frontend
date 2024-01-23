@@ -34,7 +34,7 @@ const MainNavigation = props=>{
                 </button>
                 <h1 className="main-navigation__title">
                     <Link to ="/">
-                        <h5>Registro de recetas</h5>
+                        <h5>Registro de recetas Fin</h5>
                         
                         
 
