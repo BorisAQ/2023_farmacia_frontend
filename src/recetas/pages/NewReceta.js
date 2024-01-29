@@ -78,10 +78,9 @@ const NewReceta = () => {
   }, [sendRequest, recetaId, setFormData,setPersonas]);
 
 
- const cancelarHandler = event=>{
-  event.preventDefault();
-  console.log (personas)
-//  history.push('/recetas');
+ const cancelarHandler = async event=>{
+  event.preventDefault();  
+  history.push(`/recetas/:${servicioId}/recetas`);
  }
   
   const recetaUpdateSubmitHandler = async event => {
@@ -94,9 +93,7 @@ const NewReceta = () => {
       fecha: formState.inputs.fecha.value,
       medicamentos: nuevosMedicamentos.map(med =>({'cantidad': med.cantidad, 'medicamento': med.medicamento._id}))
     }
-    console.log(recetaNueva)
-    console.log (recetaId)
-    
+
     try {
       
       await sendRequest(
