@@ -43,8 +43,9 @@ const Recetas = () => {
   return (
     <React.Fragment>
       <ErrorModal error={error} onClear={clearError} />
+      
         <div className="center">        
-        <Button to={`/recetas/new`}>+ RECETA</Button>
+        <Button  disabled={isLoading} to={`/recetas/new`}>+ RECETA</Button>
         </div>
       {isLoading && (
         <div className="center">

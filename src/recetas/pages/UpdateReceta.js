@@ -124,9 +124,8 @@ const UpdateReceta = () => {
 
 
  const cancelarHandler = event=>{
-  event.preventDefault();
-  console.log (personas)
-//  history.push('/recetas');
+  event.preventDefault();  
+  history.push(`/recetas/:${servicioId}/recetas`);
  }
   
   const recetaUpdateSubmitHandler = async event => {
@@ -159,27 +158,16 @@ const UpdateReceta = () => {
 
   };
 
-  if (isLoading) {
-    return (
-      <div className="center">
-        <LoadingSpinner />
-      </div>
-    );  
-  }
-
-  if (!loadedReceta && !error) {
-    return (
-      <div className="center">
-        <Card>
-          <h2>No se pudo encontrar la receta</h2>
-        </Card>
-      </div>
-    );
-  }
-
+  
+  
   return (
     <React.Fragment>
       <ErrorModal error={error} onClear={clearError} />      
+      {isLoading && (
+        <div className="center">
+          <LoadingSpinner />
+        </div>
+      )}
       {!isLoading && loadedReceta && (
         <form className="ente-form" onSubmit={recetaUpdateSubmitHandler}>
           <Input
@@ -230,6 +218,7 @@ const UpdateReceta = () => {
       )}
     </React.Fragment>
   );
+
 };
 
 export default UpdateReceta;

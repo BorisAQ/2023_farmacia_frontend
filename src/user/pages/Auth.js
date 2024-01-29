@@ -15,9 +15,11 @@ import { useForm } from '../../shared/hooks/form-hook';
 import { useHttpClient } from '../../shared/hooks/http-hook';
 import { AuthContext } from '../../shared/context/auth-context';
 import './Auth.css';
+import { UseDispatch, useDispatch } from 'react-redux';
 
+import  {addUser} from '../../redux/userSlice';
 const Auth = () => {
-
+  const dispatch = useDispatch();
 
   const auth = useContext(AuthContext);
   const [isLoginMode, setIsLoginMode] = useState(true);
@@ -77,8 +79,14 @@ const Auth = () => {
             'Content-Type': 'application/json'
           }
         );
+
+        console.log (responseData);
+        dispatch(addUser({name:responseData.name, userName:'lastNamePrueba', email:'emailPrueba'}))  ;
         auth.login(responseData.userId, responseData.token, responseData.servicio, responseData.prestaciones);
         
+
+
+
       } catch (err) {}
     } else {
       try {

@@ -7,6 +7,7 @@ const MainHeader = props=>{
         {
             props.children
         }
+        
     </header>
 };
 

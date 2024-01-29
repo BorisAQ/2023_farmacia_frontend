@@ -66,7 +66,7 @@ const RecetaItem = props => {
 
           <div className="ente-item__info">
                 <p>{new Date(new Date(props.fecha)).toUTCString()}                            
-                --{ props.fecha}
+                
                 {props.persona} 
                 </p>
                 <ul className="ente-list">
@@ -82,7 +82,7 @@ const RecetaItem = props => {
           </div>
             
             
-            <div className="ente-item__actions">
+            <div className="ente-item__actions center">
               { (
                 <Button to={`/recetas/${props.id}`}>E</Button>
               )}
