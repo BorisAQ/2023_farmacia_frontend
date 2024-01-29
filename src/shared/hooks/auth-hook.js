@@ -6,11 +6,13 @@ export const useAuth =()=>{
     const [tokenExpirationDate, setTokenExpirationDate] = useState();
     const [userId, setUserId] = useState(false);
     const [servicio, setServicio] = useState(false);
+    const [prestaciones, setPrestaciones] = useState(false);
   
-    const login = useCallback((uid, token, servicio, expirationDate) => {
+    const login = useCallback((uid, token, servicio, prestaciones, expirationDate) => {
       setToken(token);
       setUserId(uid);
       setServicio(servicio);
+      setPrestaciones (prestaciones);
       const tokenExpirationDate =
         expirationDate || new Date(new Date().getTime() + 1000 * 60 * 60);
         
@@ -21,7 +23,8 @@ export const useAuth =()=>{
           userId: uid,
           token: token,
           expiration: tokenExpirationDate.toISOString(),
-          servicio: servicio
+          servicio: servicio,
+          prestaciones: prestaciones
         })
       );
     }, []);
@@ -31,6 +34,7 @@ export const useAuth =()=>{
       setTokenExpirationDate(null);
       setUserId(null);
       setServicio(null);
+      setPrestaciones (null);
       localStorage.removeItem('userData');
     }, []);
   
@@ -50,9 +54,9 @@ export const useAuth =()=>{
         storedData.token &&
         new Date(storedData.expiration) > new Date()
       ) {
-        login(storedData.userId, storedData.token, storedData.servicio,  new Date(storedData.expiration));
+        login(storedData.userId, storedData.token, storedData.servicio, storedData.prestaciones,  new Date(storedData.expiration));
       }
     }, [login]);
   
-    return {token, login, logout, userId, servicio};
+    return {token, login, logout, userId, servicio, prestaciones};
 }

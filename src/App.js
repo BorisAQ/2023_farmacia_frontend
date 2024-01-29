@@ -20,11 +20,11 @@ const NewServicio = React.lazy(()=> import('./servicio/pages/newService'));
 const UpdateServicio = React.lazy(()=> import('./servicio/pages/updateService'));
 const Recetas = React.lazy(()=> import('./recetas/pages/Recetas'));
 const UpdateReceta = React.lazy(()=> import('./recetas/pages/UpdateReceta'));
-
+const NewReceta = React.lazy(()=> import('./recetas/pages/NewReceta'));
 const Auth = React.lazy(()=> import('./user/pages/Auth'));
 
 const App = () => {
-  const {token, login, logout, userId, servicio} = useAuth()
+  const {token, login, logout, userId, servicio, prestaciones} = useAuth()
   let routes;
 
   if (token) {
@@ -54,10 +54,14 @@ const App = () => {
         <Route path="/recetas/:servicioId/recetas" exact>
           <Recetas/>
         </Route>
+        <Route path="/recetas/new" exact>
+          <NewReceta/>
+        </Route>
+        
         <Route path="/recetas/:recetaId" exact>
           <UpdateReceta/>
         </Route>
-
+        
         <Redirect to="/" />
       </Switch>
     );
@@ -89,7 +93,8 @@ const App = () => {
         userId: userId,
         servicio: servicio,
         login: login,
-        logout: logout
+        logout: logout,
+        prestaciones: prestaciones
       }}
     >
       <Router>

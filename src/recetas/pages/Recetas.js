@@ -4,6 +4,7 @@ import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
 import { useHttpClient } from '../../shared/hooks/http-hook';
 import { AuthContext } from '../../shared/context/auth-context';
+import Button from '../../shared/components/FormElements/Button';
 const Recetas = () => {
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [loadedRecetas, setloadedRecetas] = useState();
@@ -36,11 +37,15 @@ const Recetas = () => {
     setloadedRecetas (recetas => recetas.filter (receta=>receta.id!== deletedRecetaId));
   }
  
-
+  const nuevaReceta = ()=>{
+    console.log ('Nueva Receta')
+  }
   return (
     <React.Fragment>
       <ErrorModal error={error} onClear={clearError} />
-      <div></div>
+        <div className="center">        
+        <Button to={`/recetas/new`}>+ RECETA</Button>
+        </div>
       {isLoading && (
         <div className="center">
           <LoadingSpinner />

@@ -1,9 +1,11 @@
 import React, { useReducer, useEffect } from 'react';
 import ServicioUsuarioList from '../../../servicio/components/ServicioUsuarioList';
 import ServicioPrestacionList from '../../../servicio/components/ServicioPrestacionList';
+import RecetaMedicamentosItem from '../../../recetas/components/RecetaMedicamentoList'
 import { validate } from '../../util/validators';
 import './Input.css';
 import Select from 'react-select'
+import RecetaMedicamentoList from '../../../recetas/components/RecetaMedicamentoList';
 
 const inputReducer = (state, action) => {
   switch (action.type) {
@@ -42,6 +44,14 @@ const Input = props => {
     dispatch({
       type: 'CHANGE',
       val: event.target.value,
+      validators: props.validators      
+    });
+  };
+
+  const changeHandlerSelector= event => {
+    dispatch({
+      type: 'CHANGE',
+      val: event.value,
       validators: props.validators      
     });
   };
@@ -103,7 +113,7 @@ const Input = props => {
 
   if (props.element === 'usuarios'){
     element = <ServicioUsuarioList
-    id="usuarios"
+    id={props.id}
     items= {props.usuarios}//referencia
     todoslosUsuarios = {props.todoslosUsuarios  } 
     value={inputState.value}  
@@ -113,33 +123,24 @@ const Input = props => {
     />   
   }
 
-  if (props.element === 'persona'){
-    const changeSelect = (e)=>{
-        console.log (e)
-    }
-    element =<div>
-      <input
-        id={props.id}
-        type={props.type}
-        placeholder={props.placeholder}
-        onChange={changeHandler}
-        onBlur={touchHandler}
-        value={inputState.value}
-      />
-            
-      
-    </div>    
+  if (props.element === 'medicamentos'){
+    element = <RecetaMedicamentoList
+    id={props.id}
+    
+    medicamentos = {props.medicamentos  } 
+    value={inputState.value}  
+    onChange={changeHandler}
+    onBlur={touchHandler}
+    
+    />   
   }
 
-  if (props.element === 'persona1'){
-    element = <Select id = 'select' options={[
-      { value: 'chocolate', label: 'Calcina Pedro' },
-      { value: 'strawberry', label: 'Calcina Salvatierra Mateo' },
-      { value: 'vanilla', label: 'Calsina Armayo Juana' }
-      
-    ]}
 
+  if (props.element === 'selector'){
+    element = <Select   id = {props.id} options= {props.items} 
     
+    defaultValue={ props.items? props.items.filter (item => item.value === props.initialValue):null}
+    onChange={changeHandlerSelector}
     theme={(theme) => ({
       ...theme,
       borderRadius: 0,

@@ -20,16 +20,15 @@ import './RecetaForm.css';
 
 
 
-const UpdateReceta = () => {
+const NewReceta = () => {
   const auth = useContext(AuthContext);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
-  const [loadedReceta, setloadedReceta] = useState();  
-  
   const [personas, setPersonas]= useState();
   const recetaId = useParams().recetaId;
-  const servicioId = useParams().servicioId;
-  const history = useHistory();
+  const servicioId =auth.servicio._id;
 
+  const history = useHistory();
+  const [nuevosMedicamentos, setNuevosMedicamentos]= useState([]);
   const [formState, inputHandler, setFormData] = useForm(
     {
       fecha: {
@@ -38,7 +37,7 @@ const UpdateReceta = () => {
       },
       usuario: {
         value: 0,
-        isValid: false
+        isValid: true
       },
       medicamentos:{
         value:[],
@@ -57,52 +56,7 @@ const UpdateReceta = () => {
   );
 
 
-  useEffect(() => {
-    const fetchReceta = async () => {
-
-
-      try {
-        const responseData = await sendRequest(
-          process.env.REACT_APP_BACKEND_URL +  `/recetas/${recetaId}`
-          ,'GET',null, 
-          {
-            'Content-Type': 'application/json',
-            Authorization: 'Bearer ' + auth.token
-          }
-        );        
-          
-        setloadedReceta(responseData.receta);
-        
-        setFormData(
-          {
-            fecha: {
-              value: responseData.receta.fecha,
-              isValid: true
-            },
-            persona: {
-              value: responseData.receta.persona,
-              isValid: true
-            },
-            medicamentos:{
-              value: responseData.receta.medicamentos,
-              isValid: true
-            },
-            usuario:{
-              value: responseData.receta.usuario,
-              isValid: true
-            },
-            servicio: {
-              value:responseData.receta.servicio,
-              isValid : true
-            }
-          },
-          true
-        );
-
-      } catch (err) {}
-    };
-    fetchReceta();
-    const fetchPersonas = async () => {
+  useEffect(() => {    const fetchPersonas = async () => {
       try {
         const responseData = await sendRequest(
           process.env.REACT_APP_BACKEND_URL +  `/personas/`
@@ -120,6 +74,7 @@ const UpdateReceta = () => {
       } catch (err) {}
     };
     fetchPersonas();
+    setNuevosMedicamentos([]);
   }, [sendRequest, recetaId, setFormData,setPersonas]);
 
 
@@ -131,24 +86,23 @@ const UpdateReceta = () => {
   
   const recetaUpdateSubmitHandler = async event => {
     event.preventDefault();
-    const recetaActualizada = {
-      servicio: formState.inputs.servicio.value,
+
+    const recetaNueva = {
+      servicio: servicioId,
       usuario: auth.userId,
       persona: formState.inputs.persona.value,
       fecha: formState.inputs.fecha.value,
-      medicamentos: loadedReceta.medicamentos.map(med =>({'cantidad': med.cantidad, 'medicamento': med.medicamento._id}))
+      medicamentos: nuevosMedicamentos.map(med =>({'cantidad': med.cantidad, 'medicamento': med.medicamento._id}))
     }
-    console.log(recetaActualizada);
-    console.log ('Actualiza');
-    
-    console.log(loadedReceta.medicamentos)
+    console.log(recetaNueva)
     console.log (recetaId)
+    
     try {
       
       await sendRequest(
-        process.env.REACT_APP_BACKEND_URL + `/recetas/${recetaId}`,
-        'PATCH',
-        JSON.stringify(recetaActualizada),
+        process.env.REACT_APP_BACKEND_URL + `/recetas/`,
+        'POST',
+        JSON.stringify(recetaNueva),
         {
           'Content-Type': 'application/json',
           Authorization: 'Bearer ' + auth.token
@@ -159,28 +113,12 @@ const UpdateReceta = () => {
 
   };
 
-  if (isLoading) {
-    return (
-      <div className="center">
-        <LoadingSpinner />
-      </div>
-    );  
-  }
-
-  if (!loadedReceta && !error) {
-    return (
-      <div className="center">
-        <Card>
-          <h2>No se pudo encontrar la receta</h2>
-        </Card>
-      </div>
-    );
-  }
+  
 
   return (
     <React.Fragment>
       <ErrorModal error={error} onClear={clearError} />      
-      {!isLoading && loadedReceta && (
+      {  (
         <form className="ente-form" onSubmit={recetaUpdateSubmitHandler}>
           <Input
             id="fecha"
@@ -190,7 +128,7 @@ const UpdateReceta = () => {
             validators={[VALIDATOR_REQUIRE()]}
             errorText="Por favor introduzca la fecha."
             onInput={inputHandler}
-            initialValue={loadedReceta.fecha.substring(0,10)}
+            
             initialValid={true}
           />
             
@@ -202,7 +140,7 @@ const UpdateReceta = () => {
             validators={[VALIDATOR_REQUIRE()]}
             errorText="Por favor introduzca el paciente."
             onInput={inputHandler}
-            initialValue={loadedReceta.persona._id}
+            initialValue={null}
             initialValid={true}
             
           />
@@ -212,7 +150,7 @@ const UpdateReceta = () => {
             element="medicamentos"
             type="medicamentos"
             label="Medicamentos"
-            medicamentos = {loadedReceta.medicamentos}
+            medicamentos = {nuevosMedicamentos}
             validators={[VALIDATOR_REQUIRE()]}
             errorText="Por favor registre por lo menos un medicamento"
             onInput={inputHandler}            
@@ -232,4 +170,4 @@ const UpdateReceta = () => {
   );
 };
 
-export default UpdateReceta;
+export default NewReceta;

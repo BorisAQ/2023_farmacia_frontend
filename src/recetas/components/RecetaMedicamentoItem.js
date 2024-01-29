@@ -9,12 +9,13 @@ import { AuthContext } from '../../shared/context/auth-context';
 import { useHttpClient } from '../../shared/hooks/http-hook';
 import './RecetaItem.css';
 
-const RecetaItem = props => {
+const ServicioMedicamentoItem = props => {
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const auth = useContext(AuthContext);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
-  const showDeleteWarningHandler = () => {
+  const showDeleteWarningHandler = event => {
+    event.preventDefault();
     setShowConfirmModal(true);
   };
 
@@ -22,18 +23,14 @@ const RecetaItem = props => {
     setShowConfirmModal(false);
   };
 
-  const confirmDeleteHandler = async () => {
-    setShowConfirmModal(false);
+  const confirmDeleteHandler =  event => {
+    event.preventDefault();
+    
     try {
-      await sendRequest(
-        process.env.REACT_APP_BACKEND_URL + `/recetas/${props.id}`,
-        'DELETE',
-        null,{
-          Authorization:'Bearer ' + auth.token
-        }        
-      );
       props.onDelete(props.id);
     } catch (err) {}
+    setShowConfirmModal(false);
+    
   };
 
   return (
@@ -42,7 +39,7 @@ const RecetaItem = props => {
       <Modal
         show={showConfirmModal}
         onCancel={cancelDeleteHandler}
-        header="Are you sure?"
+        header="¿Eliminar el mendicamento?"
         footerClass="ente-item__modal-actions"
         footer={
           <React.Fragment>
@@ -56,44 +53,21 @@ const RecetaItem = props => {
         }
       >
         <p>
-          ¿Desea eliminar la receta?
+          Do you want to proceed and delete this servicio? Please note that it
+          can't be undone thereafter.
         </p>
       </Modal>
       <li className="ente-item">
         <Card className="ente-item__content">
           {isLoading && <LoadingSpinner asOverlay />}
           <div className="ente-item__actions">
-
-          <div className="ente-item__info">
-                <p>{new Date(new Date(props.fecha)).toUTCString()}                            
-                --{ props.fecha}
-                {props.persona} 
-                </p>
-                <ul className="ente-list">
-                  {
-                      props.medicamentos && props.medicamentos.map (
-                          medicamento => <div key = {medicamento.id} id= {medicamento.id} className='medicamento'>({medicamento.cantidad}) {medicamento.medicamento.descripcion} [{medicamento.medicamento.costo}]</div> 
-                      )
-                  }
-              </ul>
-              {(
-                <div className='creadoPor'>Usuario: {props.usuario} </div>
-              )}
-          </div>
             
-            
-            <div className="ente-item__actions">
-              { (
-                <Button to={`/recetas/${props.id}`}>E</Button>
-              )}
-
-              {(
-                <Button danger onClick={showDeleteWarningHandler}>
-                  D
-                </Button>
-              )}
-              
-            </div>
+            {(
+              <Button danger onClick={showDeleteWarningHandler}>
+                -
+              </Button>
+            )}
+            {props.cantidad} - {props.descripcion} -( {props.costo}) 
             
           </div>
         </Card>
@@ -102,5 +76,4 @@ const RecetaItem = props => {
   );
 };
 
-export default RecetaItem;
-
+export default ServicioMedicamentoItem;
