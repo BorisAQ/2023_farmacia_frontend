@@ -24,7 +24,7 @@ const NewReceta = React.lazy(()=> import('./recetas/pages/NewReceta'));
 const Auth = React.lazy(()=> import('./user/pages/Auth'));
 
 const App = () => {
-  const {token, login, logout, userId, servicio, prestaciones} = useAuth()
+  const {token, login, logout, userId, servicio, prestaciones,fechaActualizacionPoblacion} = useAuth()
   let routes;
 
   if (token) {
@@ -94,7 +94,8 @@ const App = () => {
         servicio: servicio,
         login: login,
         logout: logout,
-        prestaciones: prestaciones
+        prestaciones: prestaciones  ,
+        fechaActualizacionPoblacion: fechaActualizacionPoblacion      
       }}
     >
       <Router>

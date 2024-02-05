@@ -56,7 +56,9 @@ const NewReceta = () => {
   );
 
 
-  useEffect(() => {    const fetchPersonas = async () => {
+  useEffect(() => {    
+
+    /*const fetchPersonas = async () => {
       try {
         const responseData = await sendRequest(
           process.env.REACT_APP_BACKEND_URL +  `/personas/`
@@ -73,9 +75,21 @@ const NewReceta = () => {
         
       } catch (err) {}
     };
-    fetchPersonas();
+    fetchPersonas();*/
+  
     setNuevosMedicamentos([]);
   }, [sendRequest, recetaId, setFormData,setPersonas]);
+
+  useEffect(()=>{
+    console.log ("carga personas");
+    try {
+      setPersonas (JSON.parse( localStorage.getItem("personas")));
+    }catch(e){
+      console.log (e)
+    }
+    
+  },[]);
+  
 
 
  const cancelarHandler = async event=>{

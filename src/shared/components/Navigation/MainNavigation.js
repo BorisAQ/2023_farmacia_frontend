@@ -6,7 +6,7 @@ import MainHeader from "./MainHeader";
 import NavLinks from "./NavLinks";
 import SideDrawer from "./SideDrawer";
 import Backdrop from "../UIElements/Backdrop";
-import { UseSelector, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 const MainNavigation = props=>{
     const user= useSelector((state)=>state.user);
     const [drawerIsOpen, setDrawerIsOpen] = useState(false);
@@ -36,7 +36,7 @@ const MainNavigation = props=>{
                 </button>
                 <h1 className="main-navigation__title">
                     <Link to ="/">
-                        <h5>Recetas {user.name}
+                        <h5>Recetas {user.userId}
 
                         </h5>
                         

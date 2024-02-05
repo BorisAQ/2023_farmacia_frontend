@@ -15,9 +15,9 @@ import { useForm } from '../../shared/hooks/form-hook';
 import { useHttpClient } from '../../shared/hooks/http-hook';
 import { AuthContext } from '../../shared/context/auth-context';
 import './Auth.css';
-import { UseDispatch, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
-import  {addUser} from '../../redux/userSlice';
+import  {loginUser} from '../../redux/userSlice';
 const Auth = () => {
   const dispatch = useDispatch();
 
@@ -80,12 +80,14 @@ const Auth = () => {
           }
         );
 
-        console.log (responseData);
-        dispatch(addUser({name:responseData.name, userName:'lastNamePrueba', email:'emailPrueba'}))  ;
-        auth.login(responseData.userId, responseData.token, responseData.servicio, responseData.prestaciones);
+        
+        //dispatch(login  ({name:responseData.name, userName:'lastNamePrueba', email:'emailPrueba'}))  ;
+        
         
 
+        
 
+        auth.login(responseData.userId, responseData.token, responseData.servicio, responseData.prestaciones, responseData.fechaActualizacionPoblacion);      
 
       } catch (err) {}
     } else {

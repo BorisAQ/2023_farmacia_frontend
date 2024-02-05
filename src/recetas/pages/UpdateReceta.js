@@ -24,8 +24,8 @@ const UpdateReceta = () => {
   const auth = useContext(AuthContext);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [loadedReceta, setloadedReceta] = useState();  
-  
-  const [personas, setPersonas]= useState();
+  const [personaBusqueda, setPersonaBusqueda] = useState();
+  const [personas, setPersonas]= useState('');
   const recetaId = useParams().recetaId;
   const servicioId = useParams().servicioId;
   const history = useHistory();
@@ -51,7 +51,12 @@ const UpdateReceta = () => {
       servicio:{
         value:'',
         isValid: true
+      },
+      nombreDescriptivo:{
+        value:'',
+        isValid: true
       }
+
     },
     false
   );
@@ -94,7 +99,12 @@ const UpdateReceta = () => {
             servicio: {
               value:responseData.receta.servicio,
               isValid : true
+            },
+            nombreDescriptivo:{
+              value:'',
+              isValid: true
             }
+      
           },
           true
         );
@@ -102,7 +112,7 @@ const UpdateReceta = () => {
       } catch (err) {}
     };
     fetchReceta();
-    const fetchPersonas = async () => {
+/*    const fetchPersonas = async () => {
       try {
         const responseData = await sendRequest(
           process.env.REACT_APP_BACKEND_URL +  `/personas/`
@@ -119,10 +129,21 @@ const UpdateReceta = () => {
         
       } catch (err) {}
     };
-    fetchPersonas();
+    fetchPersonas();*/
+    
+    
   }, [sendRequest, recetaId, setFormData,setPersonas]);
 
-
+  useEffect(()=>{
+    console.log ("carga personas");
+    /*try {
+      setPersonas (JSON.parse( localStorage.getItem("personas")));
+    }catch(e){
+      console.log (e)
+    }*/
+    
+  },[]);
+   
  const cancelarHandler = event=>{
   event.preventDefault();  
   history.push(`/recetas/:${servicioId}/recetas`);
@@ -158,7 +179,53 @@ const UpdateReceta = () => {
 
   };
 
-  
+  useEffect(()=>{
+    console.log ('--------------------------');
+    console.log (personas);
+    if (!personaBusqueda && personaBusqueda===''){
+      console.log ('Blanco no se puede buscar');
+    }else{
+        const fetchPersonas = async () => {      
+        try {
+          const responseData = await sendRequest(
+            process.env.REACT_APP_BACKEND_URL +  `/personas/busqueda/${personaBusqueda}`
+            ,'GET',null, 
+            {
+              'Content-Type': 'application/json',
+              Authorization: 'Bearer ' + auth.token
+            }
+          );                              
+          setPersonas (responseData.personas.map ( persona => ({ 'value': persona._id, 'label':persona.apellidosNombres})));                    
+          } catch (err) {}
+
+          
+        }
+        fetchPersonas(); 
+       /* try{
+          const personas = JSON.parse(localStorage.getItem("personas"));
+          if (personas){
+            console.log (personas[0])
+            console.log (`personaBusqueda: ${personaBusqueda}`);
+            const filtroPersonas = personas.filter (item => item.label.indexOf(personaBusqueda) > -1);
+            console.log (filtroPersonas);
+            setPersonaBusqueda(filtroPersonas);
+          }                    
+        }catch(e){
+          console.log (e);
+        }
+        console.log (`SE ha cargao los valores para ${personaBusqueda}`);  */                    
+    };
+  },[personaBusqueda, setPersonaBusqueda]);
+
+  const obtieneCambio = async(nombre) =>{
+    
+    if (nombre && nombre.indexOf ('*')>-1){
+      //console.log ('buscar: ' + nombre);
+      setPersonaBusqueda (nombre.substring(0,nombre.length-1));
+    }    
+    //else  
+      //console.log ('no buscar' + nombre);
+  }
   
   return (
     <React.Fragment>
@@ -181,7 +248,19 @@ const UpdateReceta = () => {
             initialValue={loadedReceta.fecha.substring(0,10)}
             initialValid={true}
           />
-            
+          <Input
+            id="nombreDescriptivo"
+            element="input"
+            type="input"
+            label="Nombre"
+            validators={[]}
+            errorText=""
+            onInput={inputHandler}
+            onCambio={obtieneCambio}
+            initialValue={''}
+            initialValid={true}
+            >
+          </Input>            
           <Input
             id="persona"
             element="selector"            

@@ -40,12 +40,18 @@ const Input = props => {
     onInput(id, value, isValid)
   }, [id, value, isValid, onInput]);
 
+  const {onCambio}= props;
   const changeHandler = event => {
     dispatch({
       type: 'CHANGE',
       val: event.target.value,
       validators: props.validators      
     });
+    if (onCambio){
+      event.preventDefault();
+      onCambio(event.target.value);
+    }
+    
   };
 
   const changeHandlerSelector= event => {

@@ -30,6 +30,62 @@ const Recetas = () => {
       } catch (err) {}
     };
     fetchRecetas();
+console.log ('RECUPERANDO');
+
+//personas
+    let personas;
+    if (localStorage.getItem("fechaActualizacion")===null){          
+      const fetchPersonas = async () => {
+        try {
+          const responseData = await sendRequest(
+            process.env.REACT_APP_BACKEND_URL +  `/personas/`
+            ,'GET',null, 
+            {
+              'Content-Type': 'application/json',
+              Authorization: 'Bearer ' + auth.token
+            }
+          );                                              
+          personas = responseData.personas.map ( persona => ({ 'value': persona._id, 'label':persona.apellidosNombres}));                                 
+          localStorage.setItem("fechaActualizacion",JSON.stringify(auth.fechaActualizacionPoblacion))
+          localStorage.setItem("personas",JSON.stringify(personas))
+          console.log ('iniciar poblacion')  
+          console.log (personas);      
+        } catch (err) {}
+      };
+      fetchPersonas();                    
+    }else{
+      const fechaActualizacionAlmacenada = new Date(JSON.parse(localStorage.getItem("fechaActualizacion")) ) ;
+      const fechaServidor = new Date(auth.fechaActualizacionPoblacion);
+      console.log (`Fecha almacenada: ${fechaActualizacionAlmacenada} , fechaServidor ${fechaServidor}`)        ;
+      if (fechaServidor> fechaActualizacionAlmacenada){
+          console.log ('llamar al procedimiento y actualizar poblacion')              
+          const fetchPersonas1 = async () => {
+            try {
+              const responseData = await sendRequest(
+                process.env.REACT_APP_BACKEND_URL +  `/personas/`
+                ,'GET',null, 
+                {
+                  'Content-Type': 'application/json',
+                  Authorization: 'Bearer ' + auth.token
+                }
+              );                                              
+              personas = responseData.personas.map ( persona => ({ 'value': persona._id, 'label':persona.apellidosNombres}));                                 
+              localStorage.setItem("personas",JSON.stringify(personas));
+              localStorage.setItem("fechaActualizacion",JSON.stringify(auth.fechaActualizacionPoblacion))
+              console.log (personas);
+            } catch (err) {}
+          };
+          fetchPersonas1();              
+          
+      }else{
+          console.log ('conservar población')
+          personas = JSON.parse(localStorage.getItem("personas"));
+          console.log (personas);
+      }
+      
+      
+    }
+
   }, [sendRequest]);
 
 
