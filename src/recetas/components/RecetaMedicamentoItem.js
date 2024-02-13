@@ -7,7 +7,10 @@ import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
 import { AuthContext } from '../../shared/context/auth-context';
 import { useHttpClient } from '../../shared/hooks/http-hook';
-import './RecetaItem.css';
+import './RecetaMedicamentoItem.css';
+import { AiFillDelete  } from "react-icons/ai";
+import { GiConfirmed } from "react-icons/gi";
+import { MdOutlineCancel } from "react-icons/md";
 
 const ServicioMedicamentoItem = props => {
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
@@ -22,6 +25,11 @@ const ServicioMedicamentoItem = props => {
   const cancelDeleteHandler = () => {
     setShowConfirmModal(false);
   };
+
+  const cancelDeleteHandlerButton =(e)=>{
+    e.preventDefault();
+    setShowConfirmModal(false);
+  }
 
   const confirmDeleteHandler =  event => {
     event.preventDefault();
@@ -43,34 +51,33 @@ const ServicioMedicamentoItem = props => {
         footerClass="ente-item__modal-actions"
         footer={
           <React.Fragment>
-            <Button inverse onClick={cancelDeleteHandler}>
-              CANCEL
+            <Button  onClick={cancelDeleteHandlerButton}>
+              VOLVER <MdOutlineCancel/>
             </Button>
             <Button danger onClick={confirmDeleteHandler}>
-              DELETE
+              ELIMINAR <GiConfirmed/>
             </Button>
           </React.Fragment>
         }
       >
         <p>
-          Do you want to proceed and delete this servicio? Please note that it
-          can't be undone thereafter.
+          ¿Eliminar el item de la receta?
         </p>
       </Modal>
-      <li className="ente-item">
-        <Card className="ente-item__content">
+      <li className="lista">
+        <div className="lista_fila">
           {isLoading && <LoadingSpinner asOverlay />}
-          <div className="ente-item__actions">
+          <div className="">
             
             {(
               <Button danger onClick={showDeleteWarningHandler}>
-                -
+                <AiFillDelete/>
               </Button>
             )}
             {props.cantidad} - {props.descripcion} -( {props.costo}) 
             
           </div>
-        </Card>
+        </div>
       </li>
     </React.Fragment>
   );

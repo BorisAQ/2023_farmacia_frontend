@@ -1,0 +1,101 @@
+.print-agreement {
+    margin: 40px;
+
+  }
+
+
+.impresion_contenedor {
+    list-style: none;
+    margin: 1rem auto;
+    padding: 1.5em;
+    width: 100%;
+    
+    background-color: white;
+    color: black;
+  }
+
+.impresion_contenedor_header {    
+    text-align: center;
+    
+}
+
+.recetaImpresion{    
+    color: black;
+    display: flex;
+
+    
+}
+.recetaImpresion_fecha{
+    color: black;    
+    width: 20%;
+    font-weight: bold;
+    
+
+}
+.recetaImpresion_apellidos_nombres{
+    color: black;
+    
+    width: 50%;
+    font-weight: bold;
+    
+}
+.recetaImpresion_cantidad{
+    color: black;    
+    width: 10%;
+    font-weight: bold;    
+    text-align: right;
+}
+
+.recetaImpresion_costo{
+    color: black;    
+    width: 10%;
+    font-weight: bold;    
+    text-align: right;
+}
+
+
+.recetaImpresionItem{
+    margin-top: 1em;
+    border-top: 1px dashed black;
+    color: black;
+}
+
+.recetaImpresionItem_cabecera{
+    display: flex;
+}
+
+.recetaImpresionItem_cabecera_fecha{
+    width: 20%;
+}
+
+.recetaImpresionItem_cabecera_apellidos_nombres{
+    width: 80%;
+}
+
+.recetaImpresionItem_detalle{
+    display: flex;
+}
+
+.recetaImpresionItem_detalle_fecha{
+    width: 20%;
+}
+
+.recetaImpresionItem_detalle_medicamento{
+    width: 50%;
+}
+
+.recetaImpresionItem_detalle_cantidad{
+    width: 10%;
+    text-align: right;
+}
+
+.recetaImpresionItem_detalle_costo{
+    width: 10%;
+    text-align: right;
+}
+
+.recetaImpresionItem_pie{
+    
+    display: flex;
+    font-weight: bold;
+}

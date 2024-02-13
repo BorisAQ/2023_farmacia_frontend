@@ -1,13 +1,14 @@
 import React, { useState, useContext } from 'react';
+import { Link } from 'react-router-dom';
 
-import Card from '../../shared/components/UIElements/Card';
 import Button from '../../shared/components/FormElements/Button';
 import Modal from '../../shared/components/UIElements/Modal';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
-import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
+
 import { AuthContext } from '../../shared/context/auth-context';
 import { useHttpClient } from '../../shared/hooks/http-hook';
 import './RecetaItem.css';
+import { AiFillDelete, AiFillEdit  } from "react-icons/ai";
 
 const RecetaItem = props => {
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
@@ -49,8 +50,8 @@ const RecetaItem = props => {
             <Button inverse onClick={cancelDeleteHandler}>
               CANCEL
             </Button>
-            <Button danger onClick={confirmDeleteHandler}>
-              DELETE
+            <Button  onClick={confirmDeleteHandler}>
+              d
             </Button>
           </React.Fragment>
         }
@@ -59,45 +60,46 @@ const RecetaItem = props => {
           ¿Desea eliminar la receta?
         </p>
       </Modal>
-      <li className="ente-item">
-        <Card className="ente-item__content">
-          {isLoading && <LoadingSpinner asOverlay />}
-          <div className="ente-item__actions">
-
-          <div className="ente-item__info">
-                <p>{new Date(new Date(props.fecha)).toUTCString()}                            
-                
-                {props.persona} 
-                </p>
-                <ul className="ente-list">
-                  {
+      
+        
+        <div className='receta'>
+          <div className='receta_contenedorA'>
+            <div className='receta_fecha'> {props.fecha.substring(0,10)}</div>
+            <div className='receta_nombre'> {props.persona}</div>
+            <div className='receta_matricula'> 86-2209-AQB </div>
+          </div>
+          {
                       props.medicamentos && props.medicamentos.map (
-                          medicamento => <div key = {medicamento.id} id= {medicamento.id} className='medicamento'>({medicamento.cantidad}) {medicamento.medicamento.descripcion} [{medicamento.medicamento.costo}]</div> 
+                          medicamento =><div key={medicamento.id} id={medicamento.id} className='receta_contenedorB'>
+                            <div className='receta_contenedorB_medicamento'>({medicamento.cantidad}) {medicamento.medicamento.descripcion} </div>            
+                            <div className='receta_contenedorB_costo'>{medicamento.medicamento.costo}</div>                                      
+                        </div>                                                                               
                       )
                   }
-              </ul>
-              {(
-                <div className='creadoPor'>Usuario: {props.usuario} </div>
-              )}
+          <div className='receta_contenedorB'>            
+            <div className='receta_contenedorB_medicamento'>TOTAL:</div>            
+            <div className='receta_contenedorB_costo'>154.00</div>            
           </div>
+          <div className='receta_contenedorC'>
+            <div className='receta_contenedorC_botones'> 
             
-            
-            <div className="ente-item__actions center">
               { (
-                <Button to={`/recetas/${props.id}`}>E</Button>
+                <Link className='buttonRecetaEditar' to={`/recetas/${props.id}`}>EDITAR <AiFillEdit /></Link>
+                
               )}
 
               {(
-                <Button danger onClick={showDeleteWarningHandler}>
-                  D
-                </Button>
-              )}
-              
+                <button className='buttonRecetaEliminar'  onClick={showDeleteWarningHandler}>
+                  BORRAR <AiFillDelete/>
+                </button>
+              )}                          
+          
             </div>
-            
+            <div className='receta_contenedorC_usuario'> Usuario:Serral </div>
           </div>
-        </Card>
-      </li>
+        </div>
+        
+      
     </React.Fragment>
   );
 };

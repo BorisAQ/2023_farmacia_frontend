@@ -3,14 +3,10 @@ import { useParams, useHistory } from 'react-router-dom';
 
 import Input from '../../shared/components/FormElements/Input';
 import Button from '../../shared/components/FormElements/Button';
-import Card from '../../shared/components/UIElements/Card';
-import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
+import RecetaMedicamentoList from '../components/RecetaMedicamentoList';
 import {
-  VALIDATOR_REQUIRE,
-  VALIDATOR_MINLENGTH,
-  VALIDATOR_MIN,
-  VALIDATOR_NUMERO
+  VALIDATOR_REQUIRE
 } from '../../shared/util/validators';
 import { useForm } from '../../shared/hooks/form-hook';
 import { useHttpClient } from '../../shared/hooks/http-hook';
@@ -22,10 +18,14 @@ import './RecetaForm.css';
 
 const UpdateReceta = () => {
   const auth = useContext(AuthContext);
-  const { isLoading, error, sendRequest, clearError } = useHttpClient();
-  const [loadedReceta, setloadedReceta] = useState();  
+  const {  error, sendRequest, clearError } = useHttpClient();
+  const [loadedReceta, setloadedReceta] = useState(null);  
   const [personaBusqueda, setPersonaBusqueda] = useState();
-  const [personas, setPersonas]= useState('');
+  const [personas, setPersonas]= useState([]);
+  const [recetaValida, setRecetaValida] = useState(false); 
+  const [nuevosMedicamentos, setNuevosMedicamentos]= useState([]);
+  const [cargandoPersona, setCargandoPersona] = useState(false); 
+  const [isLoading , setisLoading]= useState (false);
   const recetaId = useParams().recetaId;
   const servicioId = useParams().servicioId;
   const history = useHistory();
@@ -61,23 +61,31 @@ const UpdateReceta = () => {
     false
   );
 
+  useEffect( ()=> {
+    if (formState.inputs.persona.value && formState.inputs.fecha && nuevosMedicamentos.length>0)
+      setRecetaValida(true);
+    else
+      setRecetaValida(false);
+   }
+  ,[formState, nuevosMedicamentos]);
 
   useEffect(() => {
-    const fetchReceta = async () => {
-
-
+    const fetchReceta = async () => {  
+      setisLoading (true);    
       try {
+        
         const responseData = await sendRequest(
           process.env.REACT_APP_BACKEND_URL +  `/recetas/${recetaId}`
           ,'GET',null, 
           {
             'Content-Type': 'application/json',
-            Authorization: 'Bearer ' + auth.token
+            Authorization: 'Bearer ' + auth.token,            
           }
-        );        
-          
-        setloadedReceta(responseData.receta);
-        
+        );                  
+        setloadedReceta(responseData.receta); 
+        setNuevosMedicamentos(responseData.receta.medicamentos);
+        setPersonas([...personas, {value: responseData.receta.persona.id, label:responseData.receta.persona.apellidosNombres}])
+        setisLoading (false);
         setFormData(
           {
             fecha: {
@@ -85,7 +93,7 @@ const UpdateReceta = () => {
               isValid: true
             },
             persona: {
-              value: responseData.receta.persona,
+              value: responseData.receta.persona.id,
               isValid: true
             },
             medicamentos:{
@@ -103,47 +111,19 @@ const UpdateReceta = () => {
             nombreDescriptivo:{
               value:'',
               isValid: true
-            }
-      
+            }      
           },
           true
         );
-
       } catch (err) {}
     };
-    fetchReceta();
-/*    const fetchPersonas = async () => {
-      try {
-        const responseData = await sendRequest(
-          process.env.REACT_APP_BACKEND_URL +  `/personas/`
-          ,'GET',null, 
-          {
-            'Content-Type': 'application/json',
-            Authorization: 'Bearer ' + auth.token
-          }
-        );        
-          
-        
-        setPersonas (responseData.personas.map ( persona => ({ 'value': persona._id, 'label':persona.apellidosNombres})));
-        
-        
-      } catch (err) {}
-    };
-    fetchPersonas();*/
-    
-    
-  }, [sendRequest, recetaId, setFormData,setPersonas]);
+    fetchReceta();        
+  }, []);
 
-  useEffect(()=>{
-    console.log ("carga personas");
-    /*try {
-      setPersonas (JSON.parse( localStorage.getItem("personas")));
-    }catch(e){
-      console.log (e)
-    }*/
-    
-  },[]);
-   
+  const actualizaMedicamentos = (medicamentos)=>{    
+    setNuevosMedicamentos(medicamentos);
+  }
+
  const cancelarHandler = event=>{
   event.preventDefault();  
   history.push(`/recetas/:${servicioId}/recetas`);
@@ -156,13 +136,9 @@ const UpdateReceta = () => {
       usuario: auth.userId,
       persona: formState.inputs.persona.value,
       fecha: formState.inputs.fecha.value,
-      medicamentos: loadedReceta.medicamentos.map(med =>({'cantidad': med.cantidad, 'medicamento': med.medicamento._id}))
+      medicamentos: nuevosMedicamentos.map(med =>({'cantidad': med.cantidad, 'medicamento': med.medicamento._id}))
     }
-    console.log(recetaActualizada);
-    console.log ('Actualiza');
-    
-    console.log(loadedReceta.medicamentos)
-    console.log (recetaId)
+
     try {
       
       await sendRequest(
@@ -179,12 +155,9 @@ const UpdateReceta = () => {
 
   };
 
-  useEffect(()=>{
-    console.log ('--------------------------');
-    console.log (personas);
-    if (!personaBusqueda && personaBusqueda===''){
-      console.log ('Blanco no se puede buscar');
-    }else{
+  useEffect(()=>{    
+    setCargandoPersona(true);
+    if (personaBusqueda || personaBusqueda!==''){          
         const fetchPersonas = async () => {      
         try {
           const responseData = await sendRequest(
@@ -196,46 +169,34 @@ const UpdateReceta = () => {
             }
           );                              
           setPersonas (responseData.personas.map ( persona => ({ 'value': persona._id, 'label':persona.apellidosNombres})));                    
-          } catch (err) {}
-
-          
+          setCargandoPersona(false);
+          } catch (err) {}          
         }
-        fetchPersonas(); 
-       /* try{
-          const personas = JSON.parse(localStorage.getItem("personas"));
-          if (personas){
-            console.log (personas[0])
-            console.log (`personaBusqueda: ${personaBusqueda}`);
-            const filtroPersonas = personas.filter (item => item.label.indexOf(personaBusqueda) > -1);
-            console.log (filtroPersonas);
-            setPersonaBusqueda(filtroPersonas);
-          }                    
-        }catch(e){
-          console.log (e);
-        }
-        console.log (`SE ha cargao los valores para ${personaBusqueda}`);  */                    
+        fetchPersonas();              
     };
-  },[personaBusqueda, setPersonaBusqueda]);
+  },[personaBusqueda]);
 
-  const obtieneCambio = async(nombre) =>{
-    
-    if (nombre && nombre.indexOf ('*')>-1){
-      //console.log ('buscar: ' + nombre);
+  const obtieneCambio = async(nombre) =>{    
+    if (nombre && nombre.indexOf (' ')>-1){      
       setPersonaBusqueda (nombre.substring(0,nombre.length-1));
-    }    
-    //else  
-      //console.log ('no buscar' + nombre);
+    }        
   }
   
+
+  if (isLoading) {
+    return (
+      <div className="center">
+        Cargando la receta...
+      </div>
+    );
+  }
+
+
   return (
     <React.Fragment>
       <ErrorModal error={error} onClear={clearError} />      
-      {isLoading && (
-        <div className="center">
-          <LoadingSpinner />
-        </div>
-      )}
-      {!isLoading && loadedReceta && (
+
+      { loadedReceta && (
         <form className="ente-form" onSubmit={recetaUpdateSubmitHandler}>
           <Input
             id="fecha"
@@ -252,45 +213,42 @@ const UpdateReceta = () => {
             id="nombreDescriptivo"
             element="input"
             type="input"
-            label="Nombre"
+            label="Buscar:"
             validators={[]}
             errorText=""
             onInput={inputHandler}
             onCambio={obtieneCambio}
             initialValue={''}
             initialValid={true}
-            >
-          </Input>            
-          <Input
-            id="persona"
-            element="selector"            
-            label="Paciente"
-            items = {personas}
-            validators={[VALIDATOR_REQUIRE()]}
-            errorText="Por favor introduzca el paciente."
-            onInput={inputHandler}
-            initialValue={loadedReceta.persona._id}
-            initialValid={true}
-            
-          />
+            placeholder = {'Nombres o apellidos seguido de espacio'}
+            />      
+          {
+            cargandoPersona && <div className='mensaje_cargando_personas'>Obteniendo personas...</div>
+          }
+          {
+            !cargandoPersona && <Input
+                                      id="persona"
+                                      element="selector"            
+                                      label="Paciente"
+                                      items = {personas}
+                                      validators={[VALIDATOR_REQUIRE()]}
+                                      errorText="Por favor introduzca el paciente."
+                                      onInput={inputHandler}
+                                      initialValue={personas.length>0 ? personas[0].value:''}
+                                      initialValid={true}
+                                      
+                                    />
+          }
 
-          <Input
-            id="medicamentos"
-            element="medicamentos"
-            type="medicamentos"
-            label="Medicamentos"
-            medicamentos = {loadedReceta.medicamentos}
-            validators={[VALIDATOR_REQUIRE()]}
-            errorText="Por favor registre por lo menos un medicamento"
-            onInput={inputHandler}            
-            initialValid={true}
-            
-          />
+          <RecetaMedicamentoList            
+            medicamentos = {nuevosMedicamentos  } 
+            actualizaMedicamentos = {actualizaMedicamentos}
+         />
          
-          <Button type="submit" disabled={!formState.isValid}>
+          <Button type="submit" disabled={!recetaValida}>
               CONFIRMAR
           </Button>
-          <Button danger onClick={cancelarHandler}>
+          <Button  onClick={cancelarHandler}>
                     CANCELAR
           </Button>
         </form>

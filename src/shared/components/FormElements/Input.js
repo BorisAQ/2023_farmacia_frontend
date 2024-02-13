@@ -60,6 +60,7 @@ const Input = props => {
       val: event.value,
       validators: props.validators      
     });
+    
   };
 
   const touchHandler = () => {

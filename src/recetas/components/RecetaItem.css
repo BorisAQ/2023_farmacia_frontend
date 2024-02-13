@@ -60,12 +60,133 @@
   
   .map-container{
     height: 15rem;
-    width: 100%;
+    width: 80%;
   }  
+  .receta {
+    background-color:white ;
+    border: 1px solid #4d4d4d ;
+    border-radius: 5px;
+    
+    margin-bottom: 0.5em;
+    color:black;
+  }
+  .receta_contenedorA{
+    display: flex;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    border-bottom: 1px solid #4d4d4d;
+    font-weight: bold;
+  }
 
+  .receta_contenedorB{    
+    display: flex;
+    padding-top: 0.5em;    
+  }
+
+  .receta_contenedorC{
+    display: flex;
+    padding-top: 0.5em;
+    border-top: 1px solid #4d4d4d;
+  }
+  .receta_contenedorC_botones{    
+    padding-right: 0.5em;
+    padding-left: 0.5em;
+    width: 50%;
+  }
+
+  .receta_contenedorC_usuario{    
+    padding-left: 1em;
+    width: 50%;
+    text-align: center;
+  }
+  .receta_contenedorB_medicamento{
+    text-align: right;
+    width: 70%;
+    font-size: 90%;
+  }
+  .receta_contenedorB_costo{
+    text-align: right;
+    width: 30%;
+    padding-right: 2em;
+    font-size: 90%;
+  }
+  .receta_fecha{    
+    padding-right: 1em;
+    width: 25%;
+    text-align: center;
+    
+  }
+
+  .receta_nombre{    
+    padding-right: 1em;
+    padding-left: 1em;
+    border-right: 1px solid #4d4d4d; 
+    border-left: 1px solid #4d4d4d;
+    width: 50%;
+  }
+
+  .receta_matricula{    
+    padding-left: 1em;
+    width: 25%;
+    text-align: center;
+  }
+
+
+
+  .buttonRecetaEliminar {
+    font: inherit;
+    padding: 0.5rem 0.5rem;
+    border: 1px solid #4d4d4d ;
+    border-radius: 4px;
+    background: #4d4d4d;
+    color: white;
+    cursor: pointer;
+    margin-right: 0.5rem;
+    text-decoration: none;
+    display: inline-block;
+    height: 90%;
+  }
+  
+  .buttonRecetaEliminar:focus {
+    outline: none;
+  }
+  
+  .buttonRecetaEliminar:hover,
+  .buttonRecetaEliminar:active {
+    background: #f31515;
+    border-color: #f31515;
+  }
+  
+  .buttonRecetaEditar {
+    font: inherit;
+    padding: 0.5rem 0.5rem;
+    border: 1px solid #4d4d4d ;
+    border-radius: 4px;
+    background: #4d4d4d;
+    color: white;
+    cursor: pointer;
+    margin-right: 0.5rem;
+    text-decoration: none;
+    display: inline-block;
+    height: 90%;
+  }
+  
+  .buttonRecetaEditar:focus {
+    outline: none;
+  }
+  
+  .buttonRecetaEditar:hover,
+  .buttonRecetaEditar:active {
+    background: #0E6BA8;
+    border-color: #0E6BA8;
+  }
 
   @media (min-width: 768px) {
     .ente-item__image {
       height: 20rem;
     } 
+
+  
   }
+
+
