@@ -1,0 +1,63 @@
+.itemServicio{
+    background-color: rgb(184, 176, 176);
+    color: black;
+    border-radius: 3%;
+    margin: 1%;
+    padding: 5px;
+    display: grid;
+    grid-template-columns: 20% 80%;
+    font-size: small;
+    
+}
+
+.itemServicio__content{
+    padding: 0.5rem;
+}
+.buttonPrestacionEliminar {
+    font: inherit;
+    padding: 0.5rem 0.5rem;
+    border: 1px solid #4d4d4d ;
+    border-radius: 4px;
+    background: #4d4d4d;
+    color: white;
+    cursor: pointer;
+    margin-right: 0.5rem;
+    text-decoration: none;
+    display: inline-block;
+    height: 90%;
+  }
+  
+  .buttonPrestacionEliminar:focus {
+    outline: none;
+  }
+  
+  .buttonPrestacionEliminar:hover,
+  .buttonPrestacionEliminar:active {
+    background: #f31515;
+    border-color: #f31515;
+  }
+  
+  .buttonPrestacionEditar {
+    font: inherit;
+    padding: 0.5rem 0.5rem;
+    border: 1px solid #4d4d4d ;
+    border-radius: 4px;
+    background: #4d4d4d;
+    color: white;
+    cursor: pointer;
+    margin-right: 0.5rem;
+    text-decoration: none;
+    display: inline-block;
+    height: 90%;
+  }
+  
+  .buttonPrestacionEditar:focus {
+    outline: none;
+  }
+  
+  .buttonPrestacionEditar:hover,
+  .buttonPrestacionEditar:active {
+    background: #0E6BA8;
+    border-color: #0E6BA8;
+  }
+

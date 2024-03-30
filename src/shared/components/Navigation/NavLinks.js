@@ -17,11 +17,7 @@ const NavLinks = props => {
           TODAS
         </NavLink>
       </li>
-      {auth.isLoggedIn && (
-        <li>
-          <NavLink to={`/${userId}/messages`}>MENSAJES</NavLink>
-        </li>
-      )}
+      
 
       {auth.isLoggedIn && (
         <li>
@@ -29,23 +25,25 @@ const NavLinks = props => {
         </li>
       )}
 
-      {auth.isLoggedIn && (
+      {auth.isLoggedIn &&  auth.rol ===1 && (
         <li>
           <NavLink to={`/servicios`} exact >SERVICIOS</NavLink>
         </li>
       )}
 
-      {auth.isLoggedIn && (
+      {auth.isLoggedIn && auth.rol ===1 && (
         <li>
           <NavLink to={`/servicios/new`} exact >ADD SERVICIO</NavLink>
         </li>
       )}
 
-      {auth.isLoggedIn && (
-        <li>
-          <NavLink to="/messages/new">NUEVA</NavLink>
-        </li>
-      )}
+      { auth.isLoggedIn && auth.rol === 1 && (
+          <li>
+            <NavLink to ={`/usuarios`} exact>USUARIOS</NavLink>
+          </li>
+        )
+      }
+
       {!auth.isLoggedIn && (
         <li>
           <NavLink to="/auth">INGRESAR</NavLink>

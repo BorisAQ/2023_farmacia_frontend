@@ -1,16 +1,41 @@
-import React, { useEffect} from 'react';
+import React, {useState} from 'react';
 
-import './ServicioList.css'
+import './ServicioPrestacionList.css'
 import ServicioPrestacionItem from './ServicioPrestacionItem';
-
-const ServicioPrestacionList = props=>{
+import Modal from '../../shared/components/UIElements/Modal'
+import { AiFillPlusSquare  } from "react-icons/ai";
+const ServicioPrestacionList = ({prestaciones})=>{
     
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
+    const showNuevoMedicamentoHandler = () =>setShowConfirmModal(true);
+    const cancelNuevoMedicamentoHandler = () => setShowConfirmModal(false);
+    const aparecerMedicamentoUpdateSubmitHandler = async event => {
+      event.preventDefault();
+      showNuevoMedicamentoHandler();
+    }
+
     return (
       <React.Fragment>
+      <Modal
+        show = {showConfirmModal}
+        onCancel = {cancelNuevoMedicamentoHandler}
+        header = 'Medicamento'
+
+        footerClass="ente-item__modal-actions"
+        >
+        <p>
+          Medicamento
+        </p>
+            
+      </Modal>
+      
+      <button className='buttonPrestacionAdicionar' onClick={aparecerMedicamentoUpdateSubmitHandler}> 
+        <AiFillPlusSquare/>  ADD PRESTACION
+      </button>
       
       <ul className="ente-list">
-    {
-        props.prestaciones && props.prestaciones.map (
+      {
+        prestaciones && prestaciones.map (
             prestacion => <ServicioPrestacionItem 
                 key={prestacion._id} 
                 id={prestacion._id}                     
@@ -21,8 +46,8 @@ const ServicioPrestacionList = props=>{
                 />)
         
     
-    }
-    </ul>
+      } 
+      </ul>
     </React.Fragment>
         
       );

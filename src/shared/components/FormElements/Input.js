@@ -164,14 +164,15 @@ const Input = props => {
     neutral20:'white',
     neutral30: 'red',
     neutral40: 'red',
-    neutral50: 'black',
+    neutral50: '0E6BA8',//black
     neutral60: '#0E6BA8',
-    neutral70: 'black',
-    neutral80: 'black',
+    neutral70: '0E6BA8',//
+    neutral80: '0E6BA8',//
     primary: 'white',
-    primary25: 'black',
-    primary50: 'black',
-    primary75: 'black',      }
+    primary25: '0E6BA8',//
+    primary50: '0E6BA8',//
+    primary75: '0E6BA8',  //
+      }
       
     })}
     />

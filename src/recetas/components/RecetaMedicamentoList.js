@@ -129,24 +129,12 @@ const RecetaMedicamentoList = props =>{
             show={showConfirmModal}
             onCancel={cancelNuevoMedicamentoHandler}
             header="Medicamentos"
-            footerClass="ente-item__modal-actions"
-            
+            footerClass="ente-item__modal-actions"            
           >
             <p>
               Selecciona el medicamento a para adicionar:
             </p>
               
-                <Input
-                    id="cantidad"
-                    element="input"
-                    type="number"
-                    label="Cantidad"
-                    validators={[VALIDATOR_REQUIRE()]}
-                    errorText="Por favor introduce la cantidad"
-                    onInput={inputHandler}
-                    initialValue={'1'}
-                    initialValid={true}
-                  />
                   <Input
                     id="idMedicamento"
                     element="selector"                  
@@ -159,11 +147,23 @@ const RecetaMedicamentoList = props =>{
                     initialValid={true}
                     
                   />
+                  
+                <Input
+                    id="cantidad"
+                    element="input"
+                    type="number"
+                    label="Cantidad"
+                    validators={[VALIDATOR_REQUIRE()]}
+                    errorText="Por favor introduce la cantidad"
+                    onInput={inputHandler}
+                    initialValue={'1'}
+                    initialValid={true}
+                  />
                   <Button type="submit" onClick= {insertarMedicamentoHandler} disabled={!formState.isValid}>
-                    ADICIONAR <GiConfirmed/>
+                    <span className='mostrarBusqueda'>ADICIONAR </span><GiConfirmed/>
                   </Button>
                   <Button danger onClick={cancelarMedicamentoUpdateSubmitHandler}>
-                      CANCELAR <MdOutlineCancel/>
+                  <span className='mostrarBusqueda'>CANCELAR </span><MdOutlineCancel/>
             </Button>
 
               
@@ -180,11 +180,11 @@ const RecetaMedicamentoList = props =>{
                 {
                     medicamentos && medicamentos.map (
                         medicamento => <RecetaMedicamentoItem 
-                            costo={medicamento.medicamento.costo} 
+                            costo={medicamento.medicamento.costoMSC + medicamento.medicamento.costoSD} 
                             descripcion = {medicamento.medicamento.descripcion}
                             cantidad = {medicamento.cantidad}
-                            id = {medicamento.id}
-                            key = {medicamento.id}
+                            id = {medicamento.codigoSistema}
+                            key = {medicamento.codigoSistema}                            
                             onDelete ={
                                 onDeleteMedicamento
                             }

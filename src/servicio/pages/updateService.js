@@ -17,6 +17,7 @@ import { useHttpClient } from '../../shared/hooks/http-hook';
 import { AuthContext } from '../../shared/context/auth-context';
 import './ServiceForm.css';
 import ServicioPrestacionList from '../components/ServicioPrestacionList';
+import ServicioUsuarioList from '../components/ServicioUsuarioList';
 
 
 
@@ -52,9 +53,10 @@ const UpdateService = () => {
 
 
   useEffect(() => {
-    const fetchMessage = async () => {
+    const fetchServicio = async () => {
       try {
-        const responseData = await sendRequest(
+        console.log (ServicioId)
+        const responseServicio = await sendRequest(
           process.env.REACT_APP_BACKEND_URL +  `/servicios/${ServicioId}`
           ,'GET',null, 
           {
@@ -62,36 +64,40 @@ const UpdateService = () => {
             Authorization: 'Bearer ' + auth.token
           }
         );        
-          
-        setLoadedServicio(responseData.servicio);
+        console.log (responseServicio.servicio);
         
-        
+        setloadedUsers (responseServicio.servicio.usuarios);
+        setLoadedServicio (responseServicio.servicio);
         setFormData(
           {
             name: {
-              value: responseData.servicio.name,
+              value: responseServicio.servicio.name,
               isValid: true
             },
             codigoSistema: {
-              value: responseData.servicio.codigoSistema,
+              value: responseServicio.servicio.codigoSistema,
               isValid: true
             },
             usuarios:{
-              value: responseData.servicio.usuarios,
+              value: responseServicio.servicio.usuarios,
               isValid: true
             },
             prestaciones:{
-              value: responseData.servicio.prestaciones,
+              value: responseServicio.servicio.prestaciones,
               isValid: true
             }
           },
           true
         );
-
-      } catch (err) {}
+        
+      } catch (err) {
+        console.log (err);
+      }
     };
-    fetchMessage();
+    fetchServicio();        
+  }, []);
 
+  useEffect(()=>{
     const fetchUsers = async () => {
       try {
         const responseData = await sendRequest(
@@ -102,18 +108,13 @@ const UpdateService = () => {
             'Content-Type': 'application/json',
             Authorization: 'Bearer ' + auth.token
           }
-        );
-                
+        );                
         setloadedUsers(responseData.users);
-        /*setloadedUsers(responseData.users.filter (item=>!loadedServicio.usuarios.includes(item)));*/
-        
-        
-        
+        console.log (responseData.users)
       } catch (err) {}
     };
-    fetchUsers();        
-  }, [sendRequest, ServicioId, setFormData]);
-
+    //fetchUsers();        
+  },[]);
 
  const cancelarHandler = event=>{
   event.preventDefault();
@@ -166,6 +167,8 @@ const UpdateService = () => {
       <ErrorModal error={error} onClear={clearError} />      
       {!isLoading && loadedServicio && (
         <form className="ente-form" onSubmit={servicioUpdateSubmitHandler}>
+          <h2>Actualizar servicio</h2>
+
           <Input
             id="name"
             element="input"
@@ -187,28 +190,13 @@ const UpdateService = () => {
             initialValue={loadedServicio.codigoSistema}
             initialValid={true}
           />
-           <Input
-            id="usuarios"
-            element="usuarios"
-            label="Usuarios"
-            validators={[]}
-            errorText="Por favor introduzca el código del Sistema"
-            onInput={inputHandler}
-            initialValue={loadedServicio.usuarios}
-            usuarios = {loadedServicio.usuarios}
-            todoslosUsuarios = {loadedUsers}
-            initialValid={true}
-          />
+         <ServicioUsuarioList items = {loadedUsers}/>
           <ServicioPrestacionList
-            id= "sss"
+            id= 'ListaServicio'
             prestaciones = {loadedServicio.prestaciones}
             >
 
           </ServicioPrestacionList>
-             
-          
-          
-
           <Button type="submit" disabled={!formState.isValid}>
             CONFIRMAR
           </Button>

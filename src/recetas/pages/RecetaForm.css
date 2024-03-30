@@ -1,4 +1,5 @@
-.ente-form {
+@media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
+  .ente-form {
     list-style: none;
     margin: 0 auto;
     padding: 1rem;
@@ -20,3 +21,41 @@
   .mensaje_cargando_personas {
     color: black;
   }
+
+  .mostrarBoton{
+
+    display: none;
+  } 
+
+}
+
+@media only screen and (min-device-width : 480px)  {
+  .ente-form {
+    list-style: none;
+    margin: 0 auto;
+    padding: 1rem;
+    width: 90%;
+    max-width: 40rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+    border-radius: 6px;
+    background: white;
+  }
+
+  .ente-titulo{
+    color: black;
+  }
+
+  .ente-cuerpo{
+    color: black;
+  }
+
+  .mensaje_cargando_personas {
+    color: black;
+  }
+
+  .mostrarBoton{
+
+    display: inline;
+  } 
+}
+

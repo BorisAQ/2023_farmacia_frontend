@@ -12,6 +12,8 @@ import { useForm } from '../../shared/hooks/form-hook';
 import { useHttpClient } from '../../shared/hooks/http-hook';
 import { AuthContext } from '../../shared/context/auth-context';
 import './RecetaForm.css';
+import { GiConfirmed } from "react-icons/gi";
+import { MdOutlineCancel } from "react-icons/md";
 
 
 
@@ -82,9 +84,15 @@ const UpdateReceta = () => {
             Authorization: 'Bearer ' + auth.token,            
           }
         );                  
+
+        setPersonas([{label:responseData.receta.persona.apellidosNombres, value:responseData.receta.persona.codigoSistema+''}]);
         setloadedReceta(responseData.receta); 
-        setNuevosMedicamentos(responseData.receta.medicamentos);
-        setPersonas([...personas, {value: responseData.receta.persona.id, label:responseData.receta.persona.apellidosNombres}])
+        setNuevosMedicamentos(responseData.receta.medicamentos);        
+        
+        //console.log (loadedReceta);
+        //setPersonas([...personas, {'value': responseData.receta.persona.codigoSistema, 'label':responseData.receta.persona.apellidosNombres}]);
+        
+        
         setisLoading (false);
         setFormData(
           {
@@ -93,7 +101,7 @@ const UpdateReceta = () => {
               isValid: true
             },
             persona: {
-              value: responseData.receta.persona.id,
+              value: responseData.receta.persona.codigoSistema+'',
               isValid: true
             },
             medicamentos:{
@@ -131,13 +139,17 @@ const UpdateReceta = () => {
   
   const recetaUpdateSubmitHandler = async event => {
     event.preventDefault();
+    
     const recetaActualizada = {
-      servicio: formState.inputs.servicio.value,
+      servicio: servicioId,
       usuario: auth.userId,
-      persona: formState.inputs.persona.value,
+      persona: Number(formState.inputs.persona.value),
       fecha: formState.inputs.fecha.value,
-      medicamentos: nuevosMedicamentos.map(med =>({'cantidad': med.cantidad, 'medicamento': med.medicamento._id}))
+      medicamentos: nuevosMedicamentos.map(med =>({'cantidad': med.cantidad, 'medicamento': Number(med.id)})),
+      desactivado: false
     }
+
+
 
     try {
       
@@ -168,7 +180,7 @@ const UpdateReceta = () => {
               Authorization: 'Bearer ' + auth.token
             }
           );                              
-          setPersonas (responseData.personas.map ( persona => ({ 'value': persona._id, 'label':persona.apellidosNombres})));                    
+          setPersonas (responseData.personas.map ( persona => ({ 'value': persona.codigoSistema+'', 'label':persona.apellidosNombres})));                              
           setCargandoPersona(false);
           } catch (err) {}          
         }
@@ -176,7 +188,7 @@ const UpdateReceta = () => {
     };
   },[personaBusqueda]);
 
-  const obtieneCambio = async(nombre) =>{    
+   const obtieneCambio = async(nombre) =>{    
     if (nombre && nombre.indexOf (' ')>-1){      
       setPersonaBusqueda (nombre.substring(0,nombre.length-1));
     }        
@@ -213,14 +225,14 @@ const UpdateReceta = () => {
             id="nombreDescriptivo"
             element="input"
             type="input"
-            label="Buscar:"
+            label="Apellido:"
             validators={[]}
             errorText=""
             onInput={inputHandler}
             onCambio={obtieneCambio}
             initialValue={''}
             initialValid={true}
-            placeholder = {'Nombres o apellidos seguido de espacio'}
+            placeholder = {'Presiona espacio para buscar.'}
             />      
           {
             cargandoPersona && <div className='mensaje_cargando_personas'>Obteniendo personas...</div>
@@ -229,12 +241,13 @@ const UpdateReceta = () => {
             !cargandoPersona && <Input
                                       id="persona"
                                       element="selector"            
-                                      label="Paciente"
-                                      items = {personas}
+                                      label="Nombre"
+                                      items = {personas.length>0 ?personas:[{'label':loadedReceta.persona.apellidosNombres, 'value':loadedReceta.persona.codigoSistema+''}] }
                                       validators={[VALIDATOR_REQUIRE()]}
                                       errorText="Por favor introduzca el paciente."
                                       onInput={inputHandler}
-                                      initialValue={personas.length>0 ? personas[0].value:''}
+                                      initialValue={loadedReceta.persona.codigoSistema+''}
+                                      
                                       initialValid={true}
                                       
                                     />
@@ -246,10 +259,10 @@ const UpdateReceta = () => {
          />
          
           <Button type="submit" disabled={!recetaValida}>
-              CONFIRMAR
+            <span className='mostrarBoton'>CONFIRMAR </span><GiConfirmed/>
           </Button>
           <Button  onClick={cancelarHandler}>
-                    CANCELAR
+          <span className='mostrarBoton'>CANCELAR </span><MdOutlineCancel/>
           </Button>
         </form>
       )}

@@ -14,7 +14,7 @@ import {
   VALIDATOR_REQUIRE
 } from '../../shared/util/validators';
 
-const ServicioUsuarioList = props=>{
+const ServicioUsuarioList = (props)=>{
   const [usuariosProps, setUsuariosProps] = useState();
 
 

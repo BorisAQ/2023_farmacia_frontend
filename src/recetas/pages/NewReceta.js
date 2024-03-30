@@ -22,7 +22,7 @@ const NewReceta = () => {
   const [personaBusqueda, setPersonaBusqueda] = useState();
   const [cargandoPersona, setCargandoPersona] = useState(false); 
   const [recetaValida, setRecetaValida] = useState(false); 
-  const servicioId =auth.servicio._id;
+  const servicioId =auth.servicio.codigoSistema;
 
   const history = useHistory();
   const [nuevosMedicamentos, setNuevosMedicamentos]= useState([]);
@@ -77,7 +77,7 @@ const NewReceta = () => {
               Authorization: 'Bearer ' + auth.token
             }
           );                              
-          setPersonas (responseData.personas.map ( persona => ({ 'value': persona._id, 'label':persona.apellidosNombres})));                    
+          setPersonas (responseData.personas.map ( persona => ({ 'value': persona.codigoSistema+'', 'label':persona.apellidosNombres + ' ('+ persona.matricula+')'})));                            
           setCargandoPersona(false);
           } catch (err) {}          
         }
@@ -111,9 +111,10 @@ const NewReceta = () => {
     const recetaNueva = {
       servicio: servicioId,
       usuario: auth.userId,
-      persona: formState.inputs.persona.value,
+      persona: Number (formState.inputs.persona.value),
       fecha: formState.inputs.fecha.value,
-      medicamentos: nuevosMedicamentos.map(med =>({'cantidad': med.cantidad, 'medicamento': med.medicamento._id}))
+      medicamentos: nuevosMedicamentos.map(med =>({'cantidad': med.cantidad, 'medicamento': Number(med.medicamento._id)})),
+      desactivado:false
     }
 
     try {      
@@ -153,14 +154,14 @@ const NewReceta = () => {
             id="nombreDescriptivo"
             element="input"
             type="input"
-            label="Buscar:"
+            label="Apellido"
             validators={[]}
             errorText=""
             onInput={inputHandler}
             onCambio={obtieneCambio}
             initialValue={''}
             initialValid={true}
-            placeholder = {'Nombres o apellidos seguido de espacio'}
+            placeholder = {'Presiona espacio para buscar.'}
             >
           </Input>       
           {
@@ -170,7 +171,7 @@ const NewReceta = () => {
             !cargandoPersona &&<Input
             id="persona"
             element="selector"            
-            label="Paciente"
+            label="Nombre"
             items = {personas}
             validators={[VALIDATOR_REQUIRE()]}
             errorText="Por favor introduzca el paciente."
@@ -188,10 +189,10 @@ const NewReceta = () => {
           />
          
           <Button type="submit" disabled={!recetaValida}>
-              CONFIRMAR <GiConfirmed/>
+             <span className='mostrarBoton'>CONFIRMAR </span><GiConfirmed/>
           </Button>
           <Button danger onClick={cancelarHandler}>
-              CANCELAR  <MdOutlineCancel/>
+              <span className='mostrarBoton'>CANCELAR </span><MdOutlineCancel/>
           </Button>
         </form>
       )}

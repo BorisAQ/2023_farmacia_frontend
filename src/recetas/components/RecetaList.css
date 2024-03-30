@@ -1,3 +1,81 @@
+@media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
+
+  .mostrarBusqueda{
+    display: none;
+  }
+
+  .busqueda_contenedor {
+    list-style: none;
+    margin: 0.5rem auto;
+    padding: 0.5rem;
+    border-radius:0px;
+    background-color: white;
+    max-width: 19rem;
+    display: flex;
+  }
+  
+  .contenedorLista {
+    list-style: none;
+    margin: 1rem auto;
+    padding: 0;
+    max-width: 19rem;
+    
+  }
+    
+  
+    .buttonRecetaNuevo {
+      font: inherit;
+      padding: 0.5rem 0.5rem;
+      border: 1px solid #4d4d4d ;
+      border-radius: 4px;
+      background: #4d4d4d;
+      color: white;
+      cursor: pointer;
+      margin-right: 0.5rem;
+      text-decoration: none;
+      display: inline-block;
+      height: 90%;
+      text-align: right;
+    }
+    
+    .buttonRecetaNuevo:focus {
+      outline: none;
+    }
+    
+    .buttonRecetaNuevo:hover,
+    .buttonRecetaNuevo:active {
+      background: #0E6BA8;
+      border-color: #0E6BA8;
+    }
+  
+    .fechaIntro{
+  
+      width: 100%;
+      font: inherit;
+      border: 1px solid #ccc;
+      background: #f8f8f8;
+      padding: 0.15rem 0.25rem;
+    }
+  
+    .fechaDiv{
+      width:43%;
+      
+      margin-left: 3px;
+      margin-right: 3px;
+    }
+  
+    .nuevoDiv {
+      width: 8%;
+      align-content: center;
+    }
+
+}
+
+@media only screen and (min-device-width : 480px)  {
+  
+  .mostrarBusqueda{
+    display: inline;
+  }
 .busqueda_contenedor {
   list-style: none;
   margin: 1rem auto;
@@ -62,3 +140,4 @@
     width: 25%;
     align-content: center;
   }
+}

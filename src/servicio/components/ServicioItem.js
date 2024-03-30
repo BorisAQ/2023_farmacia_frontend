@@ -1,12 +1,13 @@
 import React, { useState, useContext } from 'react';
 
-import Card from '../../shared/components/UIElements/Card';
+
 import Button from '../../shared/components/FormElements/Button';
 import Modal from '../../shared/components/UIElements/Modal';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
 import { AuthContext } from '../../shared/context/auth-context';
 import { useHttpClient } from '../../shared/hooks/http-hook';
+import { AiFillDelete, AiFillEdit  } from "react-icons/ai";
 import './ServicioItem.css';
 
 const ServicioItem = props => {
@@ -61,21 +62,23 @@ const ServicioItem = props => {
         </p>
       </Modal>
       <li className="ente-item">
-        <Card className="ente-item__content">
+        <div className="ente-item__content">
+
           {isLoading && <LoadingSpinner asOverlay />}
+          <div className='ente-item__info'><strong>{props.name}</strong> {props.codigoSistema}</div>
           <div className="ente-item__actions">
             { (
-              <Button to={`/servicios/${props.id}`}>E</Button>
+              <Button to={`/servicios/${props.id}`}><AiFillEdit/> EDITAR</Button>
             )}
 
             {(
               <Button danger onClick={showDeleteWarningHandler}>
-                D
+                <AiFillDelete/> BORRAR
               </Button>
             )}
-            {props.name} {props.codigoSistema}
+            
           </div>
-        </Card>
+        </div>
       </li>
     </React.Fragment>
   );

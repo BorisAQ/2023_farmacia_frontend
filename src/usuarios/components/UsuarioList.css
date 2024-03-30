@@ -1,0 +1,46 @@
+.usuario-list {
+  list-style: none;
+  margin: 1rem auto;
+  padding: 0;
+  max-width: 19rem;
+  display: flexbox;  
+}
+
+.usuario_cabecera {
+  list-style: none;
+  margin: 0.5rem auto;
+  padding: 0.5rem;
+  border-radius:0px;
+  background-color: white;
+  max-width: 19rem;
+  display: grid;
+}
+
+.usuarioRecetaNuevo {
+  font: inherit;
+  padding: 0.5rem 0.5rem;
+  border: 1px solid #4d4d4d ;
+  border-radius: 4px;
+  background: #4d4d4d;
+  color: white;
+  cursor: pointer;
+  margin-right: 0.5rem;
+  text-decoration: none;
+  display: inline-block;
+  height: 90%;
+  text-align: center;
+}
+
+.usuarioRecetaNuevo:focus {
+  outline: none;
+}
+
+.usuarioRecetaNuevo:hover,
+.usuarioRecetaNuevo:active {
+  background: #0E6BA8;
+  border-color: #0E6BA8;
+}
+
+
+
+  

@@ -1,27 +1,18 @@
-import React, { useState, useContext } from 'react';
-
-import Card from '../../shared/components/UIElements/Card';
-import './ServicioItem.css';
-
+import React from 'react';
+import './ServicioPrestacionItem.css';
+import { AiFillDelete, AiFillEdit  } from "react-icons/ai";
 const ServicioPrestacionItem = props => {
   
-  
-  
-
-  
-  
   return (
-    <React.Fragment>
-     
-      <li className="ente-item">
-        <Card className="ente-item__content">
-     
-          <div className="ente-item__actions">
-            
-            {props.descripcion}  -  {props.costo} - {props.codigoSistema}
-            
-          </div>
-        </Card>
+    <React.Fragment>     
+      <li className="itemServicio">        
+        <div>
+          <button className='buttonPrestacionEditar'><AiFillEdit/></button>
+          <button className='buttonPrestacionEliminar'><AiFillDelete/></button>
+        </div>
+        <div className="itemServicio__content">                           
+          {props.descripcion}  -  {props.costo} - <strong>{props.codigoSistema}</strong>                      
+        </div>
       </li>
     </React.Fragment>
   );

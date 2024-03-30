@@ -11,9 +11,10 @@ import { AuthContext } from './shared/context/auth-context';
 import { useAuth } from './shared/hooks/auth-hook';
 import LoadingSpinner from './shared/components/UIElements/LoadingSpinner';
 
-const Users = React.lazy(()=> import('./user/pages/Users'));
-const NewMessage = React.lazy(()=> import('./message/pages/NewMessage'));
-const UserMessages = React.lazy(()=> import('./message/pages/UserMessages'));
+
+const Usuarios = React.lazy(()=> import('./usuarios/pages/Usuarios'));
+const NewUsuario = React.lazy ( ()=>import ('./usuarios/pages/NewUsuario'));
+const UpdateUsuario = React.lazy (()=>import ('./usuarios/pages/UpdateUsuario'));
 const UpdateMessage = React.lazy(()=> import('./message/pages/UpdateMessage'));
 const Servicios = React.lazy(()=> import('./servicio/pages/Servicios'));
 const NewServicio = React.lazy(()=> import('./servicio/pages/newService'));
@@ -24,26 +25,30 @@ const NewReceta = React.lazy(()=> import('./recetas/pages/NewReceta'));
 const Auth = React.lazy(()=> import('./user/pages/Auth'));
 
 const App = () => {
-  const {token, login, logout, userId, servicio, prestaciones,fechaActualizacionPoblacion} = useAuth()
+  const {token, login, logout, userId, servicio, prestaciones,fechaActualizacionPoblacion, rol} = useAuth()
   let routes;
 
   if (token) {
     routes = (
       <Switch>
         <Route path="/" exact>
-          <Users />
+          
         </Route>
-        <Route path="/:userId/messages" exact>
-          <UserMessages />
+        <Route path = "/usuarios" exact>
+          { rol ===1 && <Usuarios/>} 
         </Route>
-        <Route path="/messages/new" exact>
-          <NewMessage />
+        <Route path = "/newUsuario" exact>
+          { rol ===1 && <NewUsuario/>} 
+        </Route>
+        <Route path = "/updateUsuario/:usuarioId" exact>
+          { rol ===1 && <UpdateUsuario/>} 
         </Route>
         <Route path="/servicios" exact>
-          <Servicios />
+          { rol === 1  && <Servicios/>}
         </Route>
         <Route path="/servicios/new" exact>
-          <NewServicio />
+          {rol ===1 ? <NewServicio />: <></>}
+          
         </Route>
         <Route path="/servicios/:servicioId" exact>
           <UpdateServicio />
@@ -69,11 +74,7 @@ const App = () => {
     routes = (
       <Switch>
         <Route path="/" exact>
-          <Users />
-        </Route>
-        <Route path="/:userId/messages" exact>
-          <UserMessages />
-        
+          
         </Route>
         
         <Route path="/auth">
@@ -95,7 +96,8 @@ const App = () => {
         login: login,
         logout: logout,
         prestaciones: prestaciones  ,
-        fechaActualizacionPoblacion: fechaActualizacionPoblacion      
+        fechaActualizacionPoblacion: fechaActualizacionPoblacion      ,
+        rol: rol
       }}
     >
       <Router>

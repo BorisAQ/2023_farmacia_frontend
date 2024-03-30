@@ -39,37 +39,14 @@ const Auth = () => {
     false
   );
 
-  const switchModeHandler = () => {
-    if (!isLoginMode) {
-      setFormData(
-        {
-          ...formState.inputs,
-          name: undefined          
-        },
-        formState.inputs.email.isValid && formState.inputs.password.isValid
-      );
-    } else {
-      setFormData(
-        {
-          ...formState.inputs,
-          name: {
-            value: '',
-            isValid: false
-          }
-        },
-        false
-      );
-    }
-    setIsLoginMode(prevMode => !prevMode);
-  };
-
+  
   const authSubmitHandler = async event => {
     event.preventDefault();
 
     if (isLoginMode) {
       try {
         const responseData = await sendRequest(
-          process.env.REACT_APP_BACKEND_URL + '/users/login',
+          process.env.REACT_APP_BACKEND_URL + '/login',
           'POST',
           JSON.stringify({
             email: formState.inputs.email.value,
@@ -86,8 +63,8 @@ const Auth = () => {
         
 
         
-
-        auth.login(responseData.userId, responseData.token, responseData.servicio, responseData.prestaciones, responseData.fechaActualizacionPoblacion);      
+       
+        auth.login(responseData.userId, responseData.token, responseData.servicio, responseData.prestaciones, responseData.fechaActualizacionPoblacion, responseData.rol);      
 
       } catch (err) {}
     } else {
@@ -158,9 +135,7 @@ const Auth = () => {
             {isLoginMode ? 'LOGIN' : 'SIGNUP'}
           </Button>
         </form>
-        <Button inverse onClick={switchModeHandler}>
-          SWITCH TO {isLoginMode ? 'SIGNUP' : 'LOGIN'}
-        </Button>
+
       </Card>
     </React.Fragment>
   );

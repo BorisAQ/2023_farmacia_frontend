@@ -16,13 +16,15 @@ export const useAuth =()=>{
     const [servicio, setServicio] = useState(false);
     const [prestaciones, setPrestaciones] = useState(false);
     const [fechaActualizacionPoblacion, setFechaActualizacionPoblacion] = useState(false);
-      
-    const login = useCallback((uid, token, servicio, prestaciones, fechaActualizacionPoblacion, expirationDate) => {
+    const [rol, setRol] = useState(0);      
+    
+    const login = useCallback((uid, token, servicio, prestaciones, fechaActualizacionPoblacion, rol, expirationDate) => {
       setToken(token);
       setUserId(uid);
       setServicio(servicio);
       setPrestaciones (prestaciones);
       setFechaActualizacionPoblacion (fechaActualizacionPoblacion);
+      setRol(rol);
       const tokenExpirationDate =
         expirationDate || new Date(new Date().getTime() + 1000 * 60 * 60);
         
@@ -43,7 +45,8 @@ export const useAuth =()=>{
           expiration: tokenExpirationDate.toISOString(),
           servicio: servicio,
           prestaciones: prestaciones,
-          fechaActualizacionPoblacion: fechaActualizacionPoblacion
+          fechaActualizacionPoblacion: fechaActualizacionPoblacion,
+          rol: rol
         })
       );
     }, []);
@@ -55,7 +58,8 @@ export const useAuth =()=>{
       setServicio(null);
       setPrestaciones (null);
       setFechaActualizacionPoblacion (null);
-      localStorage.removeItem('userData');
+      setRol(null);
+      localStorage.removeItem('userData');      
       //dispatch(logoutUser  ({    }))  ;
     }, []);
   
@@ -76,10 +80,10 @@ export const useAuth =()=>{
         storedData &&
         storedData.token &&
         new Date(storedData.expiration) > new Date()
-      ) {
-        login(storedData.userId, storedData.token, storedData.servicio, storedData.prestaciones, storedData.fechaActualizacionPoblacion, new Date(storedData.expiration));
+      ) {        
+        login(storedData.userId, storedData.token, storedData.servicio, storedData.prestaciones, storedData.fechaActualizacionPoblacion, storedData.rol,new Date(storedData.expiration));
       }
     }, [login]);
   
-    return {token, login, logout, userId, servicio, fechaActualizacionPoblacion, prestaciones};
+    return {token, login, logout, userId, servicio, fechaActualizacionPoblacion, prestaciones, rol};
 }

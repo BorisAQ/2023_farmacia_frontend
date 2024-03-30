@@ -17,7 +17,7 @@ const Recetas = () => {
  const fetchRecetas = async () => {
       try {
         const responseData = await sendRequest(          
-          process.env.REACT_APP_BACKEND_URL + `/recetas/${auth.servicio._id}/recetas?fechainicial=${new Date().toISOString()}&fechafinal=${new Date().toISOString()}`,
+          process.env.REACT_APP_BACKEND_URL + `/recetas/${auth.servicio.codigoSistema}/recetas?fechainicial=${new Date().toISOString()}&fechafinal=${new Date().toISOString()}`,
             'GET',null
           ,          
           {          

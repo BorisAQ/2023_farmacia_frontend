@@ -58,19 +58,18 @@ const ServicioItem = props => {
         </p>
       </Modal>
       <li className="ente-item">
-        <Card className="ente-item__content">
+        <div className="ente-item__content">
           {isLoading && <LoadingSpinner asOverlay />}
           <div className="ente-item__actions">
             
-            {(
+            
               <Button danger onClick={showDeleteWarningHandler}>
                 -
               </Button>
-            )}
-            {props.nombre} 
+              <div>{props.nombre} </div>
             
           </div>
-        </Card>
+        </div>
       </li>
     </React.Fragment>
   );

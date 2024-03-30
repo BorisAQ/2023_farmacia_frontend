@@ -1,11 +1,10 @@
 import React, { useState, useContext } from 'react';
 
-import Card from '../../shared/components/UIElements/Card';
+
 import Button from '../../shared/components/FormElements/Button';
 import Modal from '../../shared/components/UIElements/Modal';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
-import { AuthContext } from '../../shared/context/auth-context';
 import { useHttpClient } from '../../shared/hooks/http-hook';
 import './RecetaMedicamentoItem.css';
 import { AiFillDelete  } from "react-icons/ai";
@@ -14,7 +13,7 @@ import { MdOutlineCancel } from "react-icons/md";
 
 const ServicioMedicamentoItem = props => {
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
-  const auth = useContext(AuthContext);
+  
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   const showDeleteWarningHandler = event => {
@@ -52,10 +51,10 @@ const ServicioMedicamentoItem = props => {
         footer={
           <React.Fragment>
             <Button  onClick={cancelDeleteHandlerButton}>
-              VOLVER <MdOutlineCancel/>
+              <span className='mostrar'>VOLVER </span><MdOutlineCancel/>
             </Button>
             <Button danger onClick={confirmDeleteHandler}>
-              ELIMINAR <GiConfirmed/>
+              <span className='mostrar'>ELIMINAR </span><GiConfirmed/>              
             </Button>
           </React.Fragment>
         }
@@ -67,17 +66,19 @@ const ServicioMedicamentoItem = props => {
       <li className="lista">
         <div className="lista_fila">
           {isLoading && <LoadingSpinner asOverlay />}
-          <div className="">
-            
-            {(
-              <Button danger onClick={showDeleteWarningHandler}>
-                <AiFillDelete/>
-              </Button>
-            )}
-            {props.cantidad} - {props.descripcion} -( {props.costo}) 
+            <div className='lista_fila_descripcion'>
+            {props.cantidad} - {props.descripcion}  
+            </div>
+            <div className="lista_fila_boton">
+              
+              {(
+                <Button danger onClick={showDeleteWarningHandler}>
+                  <AiFillDelete/>
+                </Button>
+              )}
+            </div>                            
             
           </div>
-        </div>
       </li>
     </React.Fragment>
   );

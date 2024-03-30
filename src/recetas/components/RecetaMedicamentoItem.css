@@ -1,11 +1,55 @@
-.lista{
-    color:black;
+@media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
+    .lista{
+        color:black;
+    }
+
+    .lista_fila{
+        
+        border-top: 1px solid gray;
+        
+        padding-bottom: 0.5px;
+        padding-top: 0.5px;
+        display: flex;
+        vertical-align: middle;
+    }
+
+    .lista_fila_boton{
+        padding-top: 1em;
+        width: 35%;
+        
+    }
+    .lista_fila_descripcion{
+        width: 65%;
+    }
+
+    .mostrar{
+        display: none;
+    }
+}
+@media only screen and (min-device-width : 480px)  {
+    
+    .mostrar{
+        display: inline;
+    }
+    .lista{
+        color:black;
+        
+    }
+    
+    .lista_fila{
+        
+        border-top: 1px solid gray;
+        display: flex;
+        padding-bottom: 2px;
+        padding-top: 2px;
+        vertical-align: middle;
+    }
+    .lista_fila_boton{
+        width: 20%;
+        
+    }
+    .lista_fila_descripcion{
+        width: 80%;
+    }
 }
 
-.lista_fila{
-    
-    border-top: 1px solid gray;
-    
-    padding-bottom: 2px;
-    padding-top: 2px;
-}

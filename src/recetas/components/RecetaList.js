@@ -15,24 +15,27 @@ const RecetaList  = props=>{
     const [fechaInicial, setFechaInicial] = useState(new Date().toISOString());
     const [fechaFinal, setFechaFinal] = useState(new Date().toISOString());
     const { isLoading, error, sendRequest, clearError } = useHttpClient();
-    const printRef = useRef(null);
-    const handlePrinter = useReactToPrint ({
-        content:  ()=>printRef.current
+    const printRefSD = useRef(null);
+    const printRefMSC = useRef(null);
+    const handlePrinterSD = useReactToPrint ({
+        content:  ()=>printRefSD.current
     });
-    
+    const handlePrinterMSC = useReactToPrint ({
+        content:  ()=>printRefMSC.current
+    });
     useEffect(() => {  
         const fetchRecetas = async () => {
           try {
             const responseData = await sendRequest(
-                process.env.REACT_APP_BACKEND_URL + `/recetas/${auth.servicio._id}/recetas?fechainicial=${fechaInicial}&fechafinal=${fechaFinal}`,
+                process.env.REACT_APP_BACKEND_URL + `/recetas/${auth.servicio.codigoSistema}/recetas?fechainicial=${fechaInicial}&fechafinal=${fechaFinal}`,
                 'GET',null
               ,
                {          
                 'Content-Type': 'application/json',
                 authorization: 'Bearer ' + auth.token,                
               }
-            );                  
-            setloadedRecetas(responseData.recetas);                
+            );                              
+            setloadedRecetas(responseData);                
           } catch (err) {}
         };
         fetchRecetas();
@@ -81,12 +84,10 @@ const RecetaList  = props=>{
                     />
 
                 </div>  
-                <div className='nuevoDiv'>        
-                    
-                </div>
+ 
                 <div className='nuevoDiv'>        
                      <Link className="buttonRecetaNuevo"
-                        disabled={isLoading} to={`/recetas/new`}>NUEVO <AiFillPlusSquare />
+                        disabled={isLoading} to={`/recetas/new`}><span className='mostrarBusqueda'>NUEVO </span><AiFillPlusSquare />
                     </Link>
                 </div>
                                              
@@ -96,34 +97,37 @@ const RecetaList  = props=>{
             
                     {
                         
-                       recetas &&  (recetas.map (
+                       recetas.recetas &&  (recetas.recetas.map (
                             receta => <RecetaItem 
                                 key={receta.id} 
-                                id={receta.id}  
+                                id={receta._id}  
                                 fecha = {receta.fecha}
                                 usuario = {receta.usuario.name}
                                 medicamentos = {receta.medicamentos}
-                                persona = {receta.persona.apellidosNombres}                    
+                                persona = {receta.persona}  
+                                costoSD = {receta.costoSD}
+                                costoMSC = {receta.costoMSC}                              
                                 />))
                     }
                 
         </div>
 
         <div className={`form-control`}>
-                    <button onClick ={handlePrinter} className='button'>print </button>                    
+            <button onClick ={handlePrinterSD} className='button'>IMPRIMIR PROFORMA SD</button>                                                  
         </div>                               
-        <div ref = {printRef} className='print-agreement'>
-                <div id='impresion' className='impresion_contenedor' >
+        <div ref = {printRefSD} className='print-agreement'>
+                <div id='impresionSD' className='impresion_contenedor' >
                     <header className='impresion_contenedor_header'>
-                        <h3 className='impresion_contenedor_header'>Recetas emitidas en san pablo</h3>
+                        <h3 className='impresion_contenedor_header'>Recetas emitidas en {auth.servicio.name} SD-MSC</h3>
                         <h4 className='impresion_contenedor_header'>
                              Desde: {fechaInicial.substring(0,10)} hasta: {fechaFinal.substring(0,10)}
                         </h4>
+                        <h3>Costo total: {recetas.costoTotalSD}</h3>
                     </header>
-                    <main>
+                    <main>                        
                         <article className='recetaImpresion'>
                             <div className='recetaImpresion_fecha'>
-                                fecha
+                                Fecha
                             </div>
                             <div className='recetaImpresion_apellidos_nombres'> 
                                 Detalle
@@ -138,9 +142,8 @@ const RecetaList  = props=>{
                                 Costo
                             </div>                                                        
                         </article>
-                        {
-                        
-                        recetas &&  (recetas.map (
+                        {                        
+                        recetas.recetas &&  (recetas.recetas.filter((receta)=>receta.costoSD >0).map (
                              receta =>  <article key={receta._id} className='recetaImpresionItem'>                          
                                             <div className='recetaImpresionItem_cabecera'>
                                                 <div className='recetaImpresionItem_cabecera_fecha'>{receta.fecha.substring(0,10)}</div>
@@ -148,25 +151,82 @@ const RecetaList  = props=>{
                                             </div>
                                             <div >         
                                                 {
-                                                    receta.medicamentos && receta.medicamentos.map (
-                                                        medicamento => <RecetaItemImpresion key = {medicamento._id} medicamento ={medicamento}/>
-                                                    )
-                                                    
-                                                }                                                                                                                     
-                                                <div className='recetaImpresionItem_pie'>
-                                                    <div className='recetaImpresionItem_detalle_fecha'></div>
+                                                    receta.medicamentos && receta.medicamentos.filter((medicamento)=>medicamento.medicamento.costoSD >0).map (
+                                                        medicamento => <RecetaItemImpresion key = {medicamento._id} medicamento ={medicamento} costo = {medicamento.medicamento.costoSD}/>
+                                                    )                                                   
+                                                }                                                                                                                                                                                                  
+                                            </div>
+                                            <div className='recetaImpresionItem_pie'>
+                                                    <div className='recetaImpresionItem_cabecera_fecha'></div>
                                                     <div className='recetaImpresionItem_detalle_medicamento'>TOTAL</div>
                                                     <div className='recetaImpresionItem_detalle_cantidad'></div>
-                                                    <div className='recetaImpresionItem_detalle_costo'> </div>
-                                                    <div className='recetaImpresionItem_detalle_costo'>150.8 </div>
-                                                </div>                             
+                                                    <div className='recetaImpresionItem_detalle_costo'></div>
+                                                    <div className='recetaImpresionItem_detalle_costo'>{receta.costoSD.toFixed(2)} </div>
                                             </div>
                                         </article>    ))
                         }                                 
-                    </main>
-                   
+                    </main>                   
                 </div>
         </div>
+        <div className={`form-control`}>
+            <button onClick ={handlePrinterMSC} className='button'>IMPRIMIR PROFORMA MSC</button>                                                  
+        </div>                               
+        <div ref = {printRefMSC} className='print-agreement'>        
+                <div id='impresionMSC' className='impresion_contenedor' >
+                    <header className='impresion_contenedor_header'>
+                        <h3 className='impresion_contenedor_header'>Recetas emitidas en {auth.servicio.name} MSC </h3>
+                        <h4 className='impresion_contenedor_header'>
+                             Desde: {fechaInicial.substring(0,10)} hasta: {fechaFinal.substring(0,10)}
+                        </h4>
+                        <h3>Costo total: {recetas.costoTotalMSC }</h3>
+                    </header>
+                    <main>                        
+                        <article className='recetaImpresion'>
+                            <div className='recetaImpresion_fecha'>
+                                Fecha
+                            </div>
+                            <div className='recetaImpresion_apellidos_nombres'> 
+                                Detalle
+                            </div>
+                            <div className='recetaImpresion_cantidad'> 
+                                Cantidad
+                            </div>
+                            <div className='recetaImpresion_costo'> 
+                                CU
+                            </div>  
+                            <div className='recetaImpresion_costo'> 
+                                Costo
+                            </div>                                                        
+                        </article>
+
+                        {                        
+                        recetas.recetas &&  (recetas.recetas.filter((receta)=>receta.costoMSC >0).map (
+                             receta =>  <article key={receta._id} className='recetaImpresionItem'>                          
+                                            <div className='recetaImpresionItem_cabecera'>
+                                                <div className='recetaImpresionItem_cabecera_fecha'>{receta.fecha.substring(0,10)}</div>
+                                                <div className='recetaImpresionItem_cabecera_apellidos_nombres'>{receta.persona.apellidosNombres}</div>
+                                            </div>
+                                            <div >         
+                                                {
+                                                    receta.medicamentos && receta.medicamentos.filter((medicamento)=>medicamento.medicamento.costoMSC >0).map (
+                                                        medicamento => <RecetaItemImpresion key = {medicamento._id} medicamento ={medicamento} costo = {medicamento.medicamento.costoMSC}/>
+                                                    )                                                   
+                                                }                                                                                                                                                                                                  
+                                            </div>
+                                            <div className='recetaImpresionItem_pie'>
+                                                    <div className='recetaImpresionItem_cabecera_fecha'></div>
+                                                    <div className='recetaImpresionItem_detalle_medicamento'>TOTAL</div>
+                                                    <div className='recetaImpresionItem_detalle_cantidad'></div>
+                                                    <div className='recetaImpresionItem_detalle_costo'></div>
+                                                    <div className='recetaImpresionItem_detalle_costo'>{receta.costoMSC.toFixed(2)} </div>
+                                            </div>
+                                        </article>    ))
+                        }                                 
+                    </main>                   
+                </div>
+            </div>
+
+            
     </React.Fragment>
     
         
